@@ -200,7 +200,7 @@ public class PurchaseReq extends Item {
                                     reqQuantity = Integer.parseInt(data[2]);
 
                                     System.out.println("No.\tReq ID\t\tItem ID\t\tQuantity\tStatus\n");
-                                    System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\tPending");
+                                    System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\tPending\n");
 
                                     //Call edit field method
                                     newReqID = "T0001";
@@ -294,6 +294,7 @@ public class PurchaseReq extends Item {
             System.out.println("Back: 0");
             System.out.print("\nSelection: ");
             selection = Sc.nextInt();
+            Sc.nextLine();
 
             if (selection < 0 || selection >= count) {
                 System.out.println("Invalid selection, please try again.");
@@ -321,10 +322,19 @@ public class PurchaseReq extends Item {
                                     reqQuantity = Integer.parseInt(data[2]);
 
                                     System.out.println("No.\tReq ID\t\tItem ID\t\tQuantity\tStatus\n");
-                                    System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\tPending");
+                                    System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\tPending\n");
 
                                     //Call delete field method
-                                    DeleteFileLine(selection);
+                                    System.out.println("Do you wish to delete the selected purchase requisition?");
+                                    System.out.println("Type out YES to confirm.");
+                                    System.out.print("\nConfirmation: ");
+                                    String confirmation = Sc.nextLine();
+                                    if (Objects.equals(confirmation, "YES")) {
+                                        DeleteFileLine(selection);
+                                        return;
+                                    } else {
+                                        System.out.println("Deletion cancelled.\n");
+                                    }
 
                                 } else {
                                     System.out.println("Invalid data format in line " + currentRow);
@@ -368,5 +378,8 @@ public class PurchaseReq extends Item {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+
+        //Replace original file with carry file
+        
     }
 }
