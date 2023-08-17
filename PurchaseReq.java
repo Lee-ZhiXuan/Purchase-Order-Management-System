@@ -2,6 +2,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Scanner;
 import java.io.BufferedReader;
@@ -256,7 +259,7 @@ public class PurchaseReq extends Item {
     }
 
 
-    // Edit Purchase Requisition Method
+    // Delete Purchase Requisition Method
     static void RemovePurchaseReq() {
         int count = 1;
         try {
@@ -358,7 +361,7 @@ public class PurchaseReq extends Item {
     }
 
 
-    //Edit method
+    //Delete method
     static void DeleteFileLine(int selection) {
 
         try (BufferedReader rd = new BufferedReader(new FileReader("requisition.txt"));
@@ -380,6 +383,7 @@ public class PurchaseReq extends Item {
         }
 
         //Replace original file with carry file
-        
+        File oldReq = new File("requisition.txt");
+
     }
 }
