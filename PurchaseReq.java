@@ -1,14 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.*;
 
 public class PurchaseReq extends Item {
@@ -381,9 +372,5 @@ public class PurchaseReq extends Item {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-
-        //Replace original file with carry file
-        File oldReq = new File("requisition.txt");
-
     }
 }
