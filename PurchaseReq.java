@@ -123,7 +123,7 @@ public class PurchaseReq extends Item {
 
                 System.out.println("\nPurchase requisition successfully created.");
 
-                System.out.print("\nPress Enter to return...");
+                System.out.print("\nPress Enter to continue...");
                 Sc.nextLine();
                 System.out.println();
 
@@ -191,7 +191,6 @@ public class PurchaseReq extends Item {
                     File fSc = new File("requisition.txt");
                     Scanner fsc = new Scanner(fSc);
                     String reqID; String itemID; int reqQuantity; int reqStatus; String reqStatF = null;
-                    String newReqID; String newItemID; int newReqQuantity; int newReqStatus;
 
                     //Print header
                     System.out.println("\nSelected Purchase Requisition:");
@@ -217,14 +216,6 @@ public class PurchaseReq extends Item {
                                         case 3 -> reqStatF = "Rejected";
                                     }
                                     System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\t" + reqStatF + "\n");
-
-                                    //Call edit field method
-                                    newReqID = "T0001";
-                                    newItemID = "TI0001";
-                                    newReqQuantity = 50;
-                                    newReqStatus = 1;
-                                    PurchaseReq.EditFileLine(selection, newReqID, newItemID, newReqQuantity, newReqStatus);
-
                                 } else {
                                     System.out.println("Invalid data format in line " + currentRow);
                                 }
@@ -240,6 +231,19 @@ public class PurchaseReq extends Item {
                     System.out.println("An error occurred.");
                     e.printStackTrace();
                 }
+
+                //Call edit field method
+                String newReqID; String newItemID; int newReqQuantity; int newReqStatus;
+                newReqID = "T0001";
+                newItemID = "TI0001";
+                newReqQuantity = 50;
+                newReqStatus = 1;
+                PurchaseReq.EditFileLine(selection, newReqID, newItemID, newReqQuantity, newReqStatus);
+                ReplaceReq();
+                System.out.print("\nPress Enter to continue...");
+                Sc.nextLine();
+                System.out.println();
+                return;
             }
         } while (selection != 0);
 
@@ -257,12 +261,14 @@ public class PurchaseReq extends Item {
             int count = 0;
 
             while ((line = rd.readLine()) != null) {
+                if (count != 0) {
+                    wr.newLine();
+                }
                 if (count != selection) {
                     wr.write(line);
                 } else {
                     wr.write(reqID + " " + itemID + " " + reqQuantity + " " + reqStatus);
                 }
-                wr.newLine();
                 count++;
             }
         } catch (IOException e) {
@@ -376,11 +382,13 @@ public class PurchaseReq extends Item {
                 if (Objects.equals(confirmation, "YES")) {
                     DeleteFileLine(selection);
                     ReplaceReq();
-                    return;
                 } else {
                     System.out.println("Deletion cancelled.\n");
                 }
-
+                System.out.print("\nPress Enter to continue...");
+                Sc.nextLine();
+                System.out.println();
+                return;
             }
         } while (selection != 0);
 
@@ -419,7 +427,7 @@ public class PurchaseReq extends Item {
         //Delete old requisition file
         File del = new File("requisition.txt");
         if (del.delete()) {
-            System.out.println("\n");
+            System.out.print("\n");
         } else {
             System.out.println("Error.");
         }
