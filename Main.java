@@ -1,4 +1,6 @@
+import java.io.File;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Main {
     public static void main(String[] args) {
@@ -6,6 +8,7 @@ public class Main {
 
         Scanner Sc = new Scanner(System.in);
         int selection = 0;
+        int close = 0;
 
         do {
             //Print header
@@ -18,20 +21,24 @@ public class Main {
             System.out.println("Edit Requisition: 3");
             System.out.println("Remove Requisition: 4");
             System.out.println("Exit: 0");
-            System.out.print("\nSelection: ");
-            selection = Sc.nextInt();
+            try {
+                System.out.print("\nSelection: ");
+                selection = Sc.nextInt();
+            } catch (InputMismatchException e) {
+                selection = 999;
+            }
             Sc.nextLine();
             System.out.println();
 
             switch (selection) {
-                case 0 -> System.out.println("Closing program.");
+                case 0 -> {System.out.println("Closing program."); close = 1;}
                 case 1 -> PurchaseReq.ViewPurchaseReq();
                 case 2 -> PurchaseReq.AddPurchaseReq();
                 case 3 -> PurchaseReq.EditPurchaseReq();
                 case 4 -> PurchaseReq.RemovePurchaseReq();
                 default -> System.out.println("Invalid Selection, please try again.");
             }
-        } while (selection != 0);
+        } while (close == 0);
     }
 }
 

@@ -1,6 +1,7 @@
 import java.util.Objects;
 import java.util.Scanner;
 import java.io.*;
+import java.util.InputMismatchException;
 
 public class PurchaseReq extends Item {
     private String reqID;
@@ -66,7 +67,7 @@ public class PurchaseReq extends Item {
             }
             fsc.close();
 
-            System.out.print("\nPress Enter to continue...");
+            System.out.print("\nPress Enter to return...");
             Sc.nextLine();
 
         } catch (FileNotFoundException e) {
@@ -91,8 +92,12 @@ public class PurchaseReq extends Item {
 
             System.out.println("Create new Requisition: 1");
             System.out.println("Back: 0");
-            System.out.print("\nSelection: ");
-            selection = Sc.nextInt();
+            try {
+                System.out.print("\nSelection: ");
+                selection = Sc.nextInt();
+            } catch (InputMismatchException e) {
+                selection = 999;
+            }
             Sc.nextLine();
             System.out.println();
 
@@ -111,17 +116,20 @@ public class PurchaseReq extends Item {
                     FileWriter tfw = new FileWriter("requisition.txt", true);
                     tfw.write("\n" + req.getReqID() + " " + req.getItemID() + " " + req.getReqQuantity() + " " + req.getReqStatus());
                     tfw.close();
-                    System.out.println("Successfully written to file.");
                 } catch (IOException e) {
-                    System.out.println("An error occurred.");
+                    System.out.println("\nAn error occurred.");
                     e.printStackTrace();
                 }
 
-                System.out.println("Item successfully created.");
+                System.out.println("\nPurchase requisition successfully created.");
+
+                System.out.print("\nPress Enter to return...");
+                Sc.nextLine();
                 System.out.println();
 
-            }
-            else {
+            } else if (selection == 0) {
+                System.out.println("Back to previous menu.\n");
+            } else {
                 System.out.println("Invalid Selection, please try again.");
             }
         } while (selection != 0);
@@ -167,8 +175,13 @@ public class PurchaseReq extends Item {
         do {
             System.out.println("Select the purchase requisition you wish to edit.");
             System.out.println("Back: 0");
-            System.out.print("\nSelection: ");
-            selection = Sc.nextInt();
+            try {
+                System.out.print("\nSelection: ");
+                selection = Sc.nextInt();
+            } catch (InputMismatchException e) {
+                selection = 999;
+            }
+            Sc.nextLine();
 
             if (selection < 0 || selection >= count) {
                 System.out.println("Invalid selection, please try again.");
@@ -298,8 +311,12 @@ public class PurchaseReq extends Item {
         do {
             System.out.println("Select the purchase requisition you wish to remove.");
             System.out.println("Back: 0");
-            System.out.print("\nSelection: ");
-            selection = Sc.nextInt();
+            try {
+                System.out.print("\nSelection: ");
+                selection = Sc.nextInt();
+            } catch (InputMismatchException e) {
+                selection = 999;
+            }
             Sc.nextLine();
 
             if (selection < 0 || selection >= count) {
@@ -335,19 +352,6 @@ public class PurchaseReq extends Item {
                                         case 3 -> reqStatF = "Rejected";
                                     }
                                     System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\t" + reqStatF + "\n");
-
-                                    //Call delete field method
-                                    System.out.println("Do you wish to delete the selected purchase requisition?");
-                                    System.out.println("Type out YES to confirm.");
-                                    System.out.print("\nConfirmation: ");
-                                    String confirmation = Sc.nextLine();
-                                    if (Objects.equals(confirmation, "YES")) {
-                                        DeleteFileLine(selection);
-                                        return;
-                                    } else {
-                                        System.out.println("Deletion cancelled.\n");
-                                    }
-
                                 } else {
                                     System.out.println("Invalid data format in line " + currentRow);
                                 }
@@ -363,6 +367,20 @@ public class PurchaseReq extends Item {
                     System.out.println("An error occurred.");
                     e.printStackTrace();
                 }
+
+                //Call delete field method
+                System.out.println("Do you wish to delete the selected purchase requisition?");
+                System.out.println("Type out YES to confirm.");
+                System.out.print("\nConfirmation: ");
+                String confirmation = Sc.nextLine();
+                if (Objects.equals(confirmation, "YES")) {
+                    DeleteFileLine(selection);
+                    ReplaceReq();
+                    return;
+                } else {
+                    System.out.println("Deletion cancelled.\n");
+                }
+
             }
         } while (selection != 0);
 
@@ -391,6 +409,34 @@ public class PurchaseReq extends Item {
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
+        }
+    }
+
+
+    //Replace actual with carry
+    static void ReplaceReq() {
+
+        //Delete old requisition file
+        File del = new File("requisition.txt");
+        if (del.delete()) {
+            System.out.println("\n");
+        } else {
+            System.out.println("Error.");
+        }
+
+        //Rename carry requisition
+        String oldFilePath = "requisitionCarry.txt";
+        String newFilePath = "requisition.txt";
+
+        File oldFile = new File(oldFilePath);
+        File newFile = new File(newFilePath);
+
+        boolean renamed = oldFile.renameTo(newFile);
+
+        if (renamed) {
+            System.out.print("Changes application successful.");
+        } else {
+            System.out.println("Error.");
         }
     }
 }
