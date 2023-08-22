@@ -1,20 +1,25 @@
 import java.util.*;
 import java.io.*;
 
-public class PurchaseReq extends Item {
+public class PurchaseReq {
     private static String reqID;
     private static int reqQuantity;
     private static int reqStatus;
     private static String reqDate;
     private static String reqStatF;
 
+    private static String itemID;
+    private static String userID;
+
     // Constructor
-    public PurchaseReq(String ReqID, String itemID, int ReqQuantity, int ReqStatus, String ReqDate) {
-        super(itemID);
+    public PurchaseReq(String ReqID, String ItemID, int ReqQuantity, int ReqStatus, String ReqDate, String UserID) {
         reqID = ReqID;
         reqQuantity = ReqQuantity;
         reqStatus = ReqStatus;
         reqDate = ReqDate;
+
+        userID = UserID;
+        itemID = ItemID;
     }
 
     // Getters and Setters
@@ -31,6 +36,10 @@ public class PurchaseReq extends Item {
         return reqDate;
     }
 
+    public String getItemID() {
+        return itemID;
+    }
+
 
     // View Purchase Requisition Method
     static void ViewPurchaseReq() {
@@ -40,10 +49,10 @@ public class PurchaseReq extends Item {
             Scanner Sc = new Scanner(System.in);
 
             //Print header
-            System.out.println("=============================================================================");
+            System.out.println("=========================================================================================");
             System.out.println("View Purchase Requisition");
-            System.out.println("=============================================================================");
-            System.out.println("Req ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\t\tStatus\n");
+            System.out.println("=========================================================================================");
+            System.out.println("Req ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
 
             while (fsc.hasNextLine()) {
                 reqID = fsc.next();
@@ -51,16 +60,17 @@ public class PurchaseReq extends Item {
                 reqQuantity = Integer.parseInt(fsc.next());
                 reqStatus = Integer.parseInt(fsc.next());
                 reqDate = fsc.next();
+                userID = fsc.next();
                 switch (reqStatus) {
-                    case 1 -> reqStatF = "Pending";
+                    case 1 -> reqStatF = "Pending-";
                     case 2 -> reqStatF = "Approved";
                     case 3 -> reqStatF = "Rejected";
                 }
-                System.out.println(reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t\t" + reqDate + "\t\t\t" + reqStatF);
+                System.out.println(reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t\t" + reqDate + "\t\t\t" + reqStatF + "\t\t" + userID);
             }
             fsc.close();
 
-            System.out.println("=============================================================================");
+            System.out.println("=========================================================================================");
             System.out.print("\nPress Enter to return...");
             Sc.nextLine();
 
@@ -73,7 +83,7 @@ public class PurchaseReq extends Item {
 
 
     // Create Purchase Requisition Method
-    static void AddPurchaseReq() {
+    static void AddPurchaseReq(String userID) {
         Scanner Sc = new Scanner(System.in);
         int selection;
 
@@ -106,11 +116,11 @@ public class PurchaseReq extends Item {
                 System.out.print("Enter Requisition Date (DD-MM-YYYY): ");
                 reqDate = Sc.nextLine();
 
-                PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, 1, reqDate);
+                PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, 1, reqDate, userID);
 
                 try {
                     FileWriter tfw = new FileWriter("requisition.txt", true);
-                    tfw.write("\n" + req.getReqID() + " " + req.getItemID() + " " + req.getReqQuantity() + " " + req.getReqStatus() + " " + req.getReqDate());
+                    tfw.write("\n" + req.getReqID() + " " + req.getItemID() + " " + req.getReqQuantity() + " " + req.getReqStatus() + " " + req.getReqDate() + " " + userID);
                     tfw.close();
                 } catch (IOException e) {
                     System.out.println("\nAn error occurred.");
