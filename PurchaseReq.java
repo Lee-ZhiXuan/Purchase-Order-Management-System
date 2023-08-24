@@ -2,25 +2,22 @@ import java.util.*;
 import java.io.*;
 
 public class PurchaseReq {
-    private static String reqID;
-    private static int reqQuantity;
-    private static int reqStatus;
-    private static String reqDate;
-    private static String reqStatF;
-
-    private static String itemID;
-    private static String userID;
+    private String reqID;
+    private int reqQuantity;
+    private int reqStatus;
+    private String reqDate;
+    private String itemID;
 
     // Constructor
-    public PurchaseReq(String ReqID, String ItemID, int ReqQuantity, int ReqStatus, String ReqDate, String UserID) {
-        reqID = ReqID;
-        reqQuantity = ReqQuantity;
-        reqStatus = ReqStatus;
-        reqDate = ReqDate;
-
-        userID = UserID;
-        itemID = ItemID;
+    public PurchaseReq(String ReqID, String ItemID, int ReqQuantity, int ReqStatus, String ReqDate) {
+        this.reqID = ReqID;
+        this.reqQuantity = ReqQuantity;
+        this.reqStatus = ReqStatus;
+        this.reqDate = ReqDate;
+        this.itemID = ItemID;
     }
+
+    public PurchaseReq() {}
 
     // Getters and Setters
     public String getReqID() {
@@ -35,55 +32,24 @@ public class PurchaseReq {
     public String getReqDate() {
         return reqDate;
     }
-
     public String getItemID() {
         return itemID;
     }
 
 
     // View Purchase Requisition Method
-    static void ViewPurchaseReq() {
-        try {
-            File fSc = new File("requisition.txt");
-            Scanner fsc = new Scanner(fSc);
-            Scanner Sc = new Scanner(System.in);
-
-            //Print header
-            System.out.println("=========================================================================================");
-            System.out.println("View Purchase Requisition");
-            System.out.println("=========================================================================================");
-            System.out.println("Req ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
-
-            while (fsc.hasNextLine()) {
-                reqID = fsc.next();
-                itemID = fsc.next();
-                reqQuantity = Integer.parseInt(fsc.next());
-                reqStatus = Integer.parseInt(fsc.next());
-                reqDate = fsc.next();
-                userID = fsc.next();
-                switch (reqStatus) {
-                    case 1 -> reqStatF = "Pending-";
-                    case 2 -> reqStatF = "Approved";
-                    case 3 -> reqStatF = "Rejected";
-                }
-                System.out.println(reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t\t" + reqDate + "\t\t\t" + reqStatF + "\t\t" + userID);
-            }
-            fsc.close();
-
-            System.out.println("=========================================================================================");
-            System.out.print("\nPress Enter to return...");
-            Sc.nextLine();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+    public void View() {
+        Scanner Sc = new Scanner(System.in);
+        displayReq("View Requisition List");
+        System.out.print("\nPress Enter to return...");
+        Sc.nextLine();
         System.out.println();
     }
 
 
     // Create Purchase Requisition Method
-    static void AddPurchaseReq(String userID) {
+    public void Add(String userID) {
+        String reqID; int reqQuantity; String reqDate; String itemID;
         Scanner Sc = new Scanner(System.in);
         int selection;
 
@@ -116,7 +82,7 @@ public class PurchaseReq {
                 System.out.print("Enter Requisition Date (DD-MM-YYYY): ");
                 reqDate = Sc.nextLine();
 
-                PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, 1, reqDate, userID);
+                PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, 1, reqDate);
 
                 try {
                     FileWriter tfw = new FileWriter("requisition.txt", true);
@@ -142,40 +108,10 @@ public class PurchaseReq {
 
 
     // Edit Purchase Requisition Method
-    static void EditPurchaseReq() {
-        int count = 1;
+    public void Edit() {
+        String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID; String userID = null;
 
-        try {
-            File fSc = new File("requisition.txt");
-            Scanner fsc = new Scanner(fSc);
-
-            //Print header
-            System.out.println("=============================================================================");
-            System.out.println("Edit Purchase Requisition");
-            System.out.println("=============================================================================");
-            System.out.println("No.\tReq ID\t\t\tItem ID\t\t\tQuantity\tDate\t\t\t\tStatus\n");
-
-            while (fsc.hasNextLine()) {
-                reqID = fsc.next();
-                itemID = fsc.next();
-                reqQuantity = Integer.parseInt(fsc.next());
-                reqStatus = Integer.parseInt(fsc.next());
-                reqDate = fsc.next();
-                switch (reqStatus) {
-                    case 1 -> reqStatF = "Pending";
-                    case 2 -> reqStatF = "Approved";
-                    case 3 -> reqStatF = "Rejected";
-                }
-                System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t" + reqDate+ "\t\t\t" + reqStatF);
-                count++;
-            }
-            fsc.close();
-            System.out.println("=============================================================================");
-
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        int count = displayReq("Edit Purchase Requisitions");
 
         Scanner Sc = new Scanner(System.in);
         int selection;
@@ -206,13 +142,14 @@ public class PurchaseReq {
                     while ((line = br.readLine()) != null) {
                         currentRow++;
 
-                        if (currentRow == selection + 1) {
+                        if (currentRow == selection + 2) {
                             String[] data = line.split(" ");
                             reqID = data[0];
                             itemID = data[1];
                             reqQuantity = Integer.parseInt(data[2]);
                             reqStatus = Integer.parseInt(data[3]);
                             reqDate = data[4];
+                            userID = data[5];
 
                             System.out.println("=============================================================================");
                             System.out.println("No.\tReq ID\t\t\tItem ID\t\t\tQuantity\tDate\t\t\t\tStatus\n");
@@ -248,7 +185,8 @@ public class PurchaseReq {
                 int newReqStatus = Sc.nextInt();
                 Sc.nextLine();
 
-                PurchaseReq.EditFileLine(selection, newReqID, newItemID, newReqQuantity, newReqStatus, newReqDate);
+                int selection2 = selection + 1;
+                PurchaseReq.EditFileLine(selection2, newReqID, newItemID, newReqQuantity, newReqStatus, newReqDate, userID);
                 ReplaceReq();
                 System.out.print("\nPress Enter to continue...");
                 Sc.nextLine();
@@ -262,7 +200,7 @@ public class PurchaseReq {
 
 
     // Edit method
-    static void EditFileLine(int selection, String reqID, String itemID, int reqQuantity, int reqStatus, String reqDate) {
+    static void EditFileLine(int selection, String reqID, String itemID, int reqQuantity, int reqStatus, String reqDate, String userID) {
 
         try (BufferedReader rd = new BufferedReader(new FileReader("requisition.txt"));
              BufferedWriter wr = new BufferedWriter(new FileWriter("requisitionCarry.txt"))) {
@@ -277,7 +215,7 @@ public class PurchaseReq {
                 if (count != selection) {
                     wr.write(line);
                 } else {
-                    wr.write(reqID + " " + itemID + " " + reqQuantity + " " + reqStatus + " " + reqDate);
+                    wr.write(reqID + " " + itemID + " " + reqQuantity + " " + reqStatus + " " + reqDate + " " + userID);
                 }
                 count++;
             }
@@ -289,39 +227,10 @@ public class PurchaseReq {
 
 
     // Delete Purchase Requisition Method
-    static void RemovePurchaseReq() {
-        int count = 1;
-        try {
-            File fSc = new File("requisition.txt");
-            Scanner fsc = new Scanner(fSc);
+    public void Delete() {
+        String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID;
 
-            //Print header
-            System.out.println("=============================================================================");
-            System.out.println("Remove Purchase Requisition");
-            System.out.println("=============================================================================");
-            System.out.println("No.\tReq ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\tStatus\n");
-
-            while (fsc.hasNextLine()) {
-                reqID = fsc.next();
-                itemID = fsc.next();
-                reqQuantity = Integer.parseInt(fsc.next());
-                reqStatus = Integer.parseInt(fsc.next());
-                reqDate = fsc.next();
-                switch (reqStatus) {
-                    case 1 -> reqStatF = "Pending";
-                    case 2 -> reqStatF = "Approved";
-                    case 3 -> reqStatF = "Rejected";
-                }
-                System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\t\t" + reqDate+ "\t\t" + reqStatF);
-                count++;
-            }
-            fsc.close();
-            System.out.println("=============================================================================");
-
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        int count = displayReq("Remove Purchase Requisition");
 
         Scanner Sc = new Scanner(System.in);
         int selection;
@@ -351,7 +260,7 @@ public class PurchaseReq {
                     while ((line = br.readLine()) != null) {
                         currentRow++;
 
-                        if (currentRow == selection + 1) {
+                        if (currentRow == selection + 2) {
                             String[] data = line.split(" ");
                             reqID = data[0];
                             itemID = data[1];
@@ -382,7 +291,8 @@ public class PurchaseReq {
                 System.out.print("\nConfirmation: ");
                 String confirmation = Sc.nextLine();
                 if (Objects.equals(confirmation, "YES")) {
-                    DeleteFileLine(selection);
+                    int selection2 = selection + 1;
+                    DeleteFileLine(selection2);
                     ReplaceReq();
                 } else {
                     System.out.println("Deletion cancelled.");
@@ -398,7 +308,7 @@ public class PurchaseReq {
     }
 
 
-    // Delete method
+    // Delete Method
     static void DeleteFileLine(int selection) {
 
         try (BufferedReader rd = new BufferedReader(new FileReader("requisition.txt"));
@@ -423,7 +333,7 @@ public class PurchaseReq {
     }
 
 
-    // Replace actual with carry
+    // Replace Actual with Carry
     static void ReplaceReq() {
 
         //Delete old requisition file
@@ -451,37 +361,11 @@ public class PurchaseReq {
     }
 
 
-    // Purchase requisition approval
-    static void ReqApproval() {
-        int count = 1;
-        try {
-            File fSc = new File("requisition.txt");
-            Scanner fsc = new Scanner(fSc);
+    // Purchase Requisition Approval
+    public void ReqApproval() {
+        String reqID = null; int reqQuantity = 0; int reqStatus; String reqDate = null; String itemID = null; String userID = null;
 
-            //Print header
-            System.out.println("=============================================================================");
-            System.out.println("Requisition Approval");
-            System.out.println("=============================================================================");
-            System.out.println("No.\tReq ID\t\t\tItem ID\t\t\tQuantity\tDate\t\t\t\tStatus\n");
-
-            while (fsc.hasNextLine()) {
-                reqID = fsc.next();
-                itemID = fsc.next();
-                reqQuantity = Integer.parseInt(fsc.next());
-                reqStatus = Integer.parseInt(fsc.next());
-                reqDate = fsc.next();
-                if (reqStatus == 1) {
-                    System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t" + reqDate + "\t\t\tPending");
-                    count++;
-                }
-            }
-            fsc.close();
-            System.out.println("=============================================================================");
-
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        int count = selectiveDisplayReq("Handle Purchase Requisition", 1, "Pending-");
 
         Scanner Sc = new Scanner(System.in);
         int selection; int selection2 = 0;
@@ -517,6 +401,7 @@ public class PurchaseReq {
                             reqQuantity = Integer.parseInt(data[2]);
                             reqStatus = Integer.parseInt(data[3]);
                             reqDate = data[4];
+                            userID = data[5];
                             selection2++;
                             if (reqStatus == 1) {
                                 currentRow++;
@@ -548,7 +433,7 @@ public class PurchaseReq {
                 }
                 Sc.nextLine();
 
-                PurchaseReq.EditFileLine(selection2, reqID, itemID, reqQuantity, selection3, reqDate);
+                PurchaseReq.EditFileLine(selection2, reqID, itemID, reqQuantity, selection3, reqDate, userID);
                 ReplaceReq();
                 System.out.print("\nPress Enter to continue...");
                 Sc.nextLine();
@@ -558,5 +443,84 @@ public class PurchaseReq {
         } while (selection != 0);
 
         System.out.println();
+    }
+
+
+    // Display Requisition List Method
+    static int displayReq(String header) {
+        int count = 0;
+        try {
+            String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID; String userID;
+
+            File fSc = new File("requisition.txt");
+            Scanner fsc = new Scanner(fSc);
+
+            //Print header
+            System.out.println("=============================================================================================");
+            System.out.println(header);
+            System.out.println("=============================================================================================");
+            System.out.println("#\tReq ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
+
+            while (fsc.hasNextLine()) {
+                reqID = fsc.next();
+                itemID = fsc.next();
+                reqQuantity = Integer.parseInt(fsc.next());
+                reqStatus = Integer.parseInt(fsc.next());
+                reqDate = fsc.next();
+                userID = fsc.next();
+                switch (reqStatus) {
+                    case 1 -> reqStatF = "Pending-";
+                    case 2 -> reqStatF = "Approved";
+                    case 3 -> reqStatF = "Rejected";
+                }
+                System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t\t" + reqDate + "\t\t\t" + reqStatF + "\t\t" + userID);
+                count++;
+            }
+            fsc.close();
+
+            System.out.println("=============================================================================================");
+
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+
+    // Selective Display Requisition List Method
+    static int selectiveDisplayReq(String header, int selection, String reqStatF) {
+        int count = 1;
+        try {
+            String reqID; int reqQuantity; int reqStatus; String reqDate; String itemID; String userID;
+            File fSc = new File("requisition.txt");
+            Scanner fsc = new Scanner(fSc);
+
+            //Print header
+            System.out.println("=============================================================================================");
+            System.out.println(header);
+            System.out.println("=============================================================================================");
+            System.out.println("#\tReq ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
+
+            while (fsc.hasNextLine()) {
+                reqID = fsc.next();
+                itemID = fsc.next();
+                reqQuantity = Integer.parseInt(fsc.next());
+                reqStatus = Integer.parseInt(fsc.next());
+                reqDate = fsc.next();
+                userID = fsc.next();
+                if (reqStatus == selection) {
+                    System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t\t" + reqDate + "\t\t\t" + reqStatF + "\t\t" + userID);
+                    count++;
+                }
+            }
+            fsc.close();
+            System.out.println("=============================================================================================");
+
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return count;
     }
 }
