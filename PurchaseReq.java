@@ -1,12 +1,13 @@
 import java.util.*;
 import java.io.*;
 
-public class PurchaseReq {
+class PurchaseReq implements SalesObject{
     private String reqID;
     private int reqQuantity;
     private int reqStatus;
     private String reqDate;
     private String itemID;
+
 
     // Constructor
     public PurchaseReq(String ReqID, String ItemID, int ReqQuantity, int ReqStatus, String ReqDate) {
@@ -15,6 +16,7 @@ public class PurchaseReq {
         this.reqStatus = ReqStatus;
         this.reqDate = ReqDate;
         this.itemID = ItemID;
+
     }
 
     public PurchaseReq() {}
@@ -48,7 +50,7 @@ public class PurchaseReq {
 
 
     // Create Purchase Requisition Method
-    public void Add(String userID) {
+    public void Create(String userID) {
         String reqID; int reqQuantity; String reqDate; String itemID;
         Scanner Sc = new Scanner(System.in);
         int selection;
@@ -105,6 +107,7 @@ public class PurchaseReq {
             }
         } while (selection != 0);
     }
+    public void Create() {}
 
 
     // Edit Purchase Requisition Method
