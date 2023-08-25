@@ -8,7 +8,8 @@ public class PurchaseManager extends User{
         super(userID, userName, password, position);
     }
     
-    public void PmMenu(){
+    @Override
+    void user_menu(){
         boolean not_exit = true;
         do{
         Scanner sc = new Scanner(System.in); int choice;

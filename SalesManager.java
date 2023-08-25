@@ -8,7 +8,8 @@ public class SalesManager extends User{
         super(userID, userName, password, position);
     }
     
-    public void SmMenu(){
+    @Override
+    void user_menu(){
         boolean not_exit = true;
         do{
         Scanner sc = new Scanner(System.in); int choice;
