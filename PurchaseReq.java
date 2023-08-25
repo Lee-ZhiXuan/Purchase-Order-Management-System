@@ -38,6 +38,8 @@ class PurchaseReq implements SalesObject{
         return itemID;
     }
 
+    Scanner Sc = new Scanner(System.in);
+
 
     // View Purchase Requisition Method
     public void View() {
@@ -52,7 +54,6 @@ class PurchaseReq implements SalesObject{
     // Create Purchase Requisition Method
     public void Create(String userID) {
         String reqID; int reqQuantity; String reqDate; String itemID;
-        Scanner Sc = new Scanner(System.in);
         int selection;
 
         do {
@@ -111,12 +112,8 @@ class PurchaseReq implements SalesObject{
 
 
     // Edit Purchase Requisition Method
-    public void Edit() {
-        String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID; String userID = null;
-
+    public void Edit(String userID) {
         int count = displayReq("Edit Purchase Requisitions");
-
-        Scanner Sc = new Scanner(System.in);
         int selection;
 
         do {
@@ -136,40 +133,7 @@ class PurchaseReq implements SalesObject{
             } else if (selection < 1 || selection >= count) {
                 System.out.println("Invalid selection, please try again.");
             } else {
-                //Print header
-                System.out.println("\nSelected Purchase Requisition:");
-                try (BufferedReader br = new BufferedReader(new FileReader("requisition.txt"))) {
-                    String line;
-                    int currentRow = 0;
-
-                    while ((line = br.readLine()) != null) {
-                        currentRow++;
-
-                        if (currentRow == selection + 2) {
-                            String[] data = line.split(" ");
-                            reqID = data[0];
-                            itemID = data[1];
-                            reqQuantity = Integer.parseInt(data[2]);
-                            reqStatus = Integer.parseInt(data[3]);
-                            reqDate = data[4];
-                            userID = data[5];
-
-                            System.out.println("=============================================================================");
-                            System.out.println("No.\tReq ID\t\t\tItem ID\t\t\tQuantity\tDate\t\t\t\tStatus\n");
-                            switch (reqStatus) {
-                                case 1 -> reqStatF = "Pending";
-                                case 2 -> reqStatF = "Approved";
-                                case 3 -> reqStatF = "Rejected";
-                            }
-                            System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\t" + reqDate + "\t\t\t" + reqStatF);
-                            System.out.println("=============================================================================");
-                            break;
-                        }
-                    }
-                } catch (IOException e) {
-                    System.out.println("An error occurred.");
-                    e.printStackTrace();
-                }
+                selectedDisplayReq(selection);
 
                 //Call edit field method
                 System.out.print("Enter Requisition ID: ");
@@ -200,6 +164,7 @@ class PurchaseReq implements SalesObject{
 
         System.out.println();
     }
+    public void Edit() {}
 
 
     // Edit method
@@ -232,10 +197,7 @@ class PurchaseReq implements SalesObject{
     // Delete Purchase Requisition Method
     public void Delete() {
         String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID;
-
         int count = displayReq("Remove Purchase Requisition");
-
-        Scanner Sc = new Scanner(System.in);
         int selection;
 
         do {
@@ -254,39 +216,7 @@ class PurchaseReq implements SalesObject{
             } else if (selection < 1 || selection >= count) {
                 System.out.println("Invalid selection, please try again.");
             } else {
-                //Print header
-                System.out.println("\nSelected Purchase Requisition:");
-                try (BufferedReader br = new BufferedReader(new FileReader("requisition.txt"))) {
-                    String line;
-                    int currentRow = 0;
-
-                    while ((line = br.readLine()) != null) {
-                        currentRow++;
-
-                        if (currentRow == selection + 2) {
-                            String[] data = line.split(" ");
-                            reqID = data[0];
-                            itemID = data[1];
-                            reqQuantity = Integer.parseInt(data[2]);
-                            reqStatus = Integer.parseInt(data[3]);
-                            reqDate = data[4];
-
-                            System.out.println("=============================================================================");
-                            System.out.println("No.\tReq ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\tStatus\n");
-                            switch (reqStatus) {
-                                case 1 -> reqStatF = "Pending";
-                                case 2 -> reqStatF = "Approved";
-                                case 3 -> reqStatF = "Rejected";
-                            }
-                            System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\t\t" + reqDate+ "\t\t" +reqStatF);
-                            System.out.println("=============================================================================");
-                            break;
-                        }
-                    }
-                } catch (IOException e) {
-                    System.out.println("An error occurred.");
-                    e.printStackTrace();
-                }
+                selectedDisplayReq(selection);
 
                 //Call delete field method
                 System.out.println("Do you wish to delete the selected purchase requisition?");
@@ -367,10 +297,7 @@ class PurchaseReq implements SalesObject{
     // Purchase Requisition Approval
     public void ReqApproval() {
         String reqID = null; int reqQuantity = 0; int reqStatus; String reqDate = null; String itemID = null; String userID = null;
-
         int count = selectiveDisplayReq("Handle Purchase Requisition", 1, "Pending-");
-
-        Scanner Sc = new Scanner(System.in);
         int selection; int selection2 = 0;
 
         do {
@@ -393,8 +320,7 @@ class PurchaseReq implements SalesObject{
                 //Print header
                 System.out.println("\nSelected Purchase Requisition:");
                 try (BufferedReader br = new BufferedReader(new FileReader("requisition.txt"))) {
-                    String line;
-                    int currentRow = 0;
+                    String line; int currentRow = 0;
 
                     while ((line = br.readLine()) != null) {
                         String[] data = line.split(" ");
@@ -410,7 +336,7 @@ class PurchaseReq implements SalesObject{
                                 currentRow++;
                                 if (currentRow == selection) {
                                     System.out.println("=============================================================================");
-                                    System.out.println("No.\tReq ID\t\t\tItem ID\t\t\tQuantity\tDate\t\t\t\tStatus\n");
+                                    System.out.println("#\tReq ID\t\tItem ID\t\tQuantity\tDate\t\t\t\tStatus\n");
                                     System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t" + reqDate + "\t\t\tPending");
                                     System.out.println("=============================================================================");
                                     break;
@@ -462,7 +388,7 @@ class PurchaseReq implements SalesObject{
             System.out.println("=============================================================================================");
             System.out.println(header);
             System.out.println("=============================================================================================");
-            System.out.println("#\tReq ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
+            System.out.println("#\tReq ID\t\tItem ID\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
 
             while (fsc.hasNextLine()) {
                 reqID = fsc.next();
@@ -503,7 +429,7 @@ class PurchaseReq implements SalesObject{
             System.out.println("=============================================================================================");
             System.out.println(header);
             System.out.println("=============================================================================================");
-            System.out.println("#\tReq ID\t\t\tItem ID\t\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
+            System.out.println("#\tReq ID\t\tItem ID\t\tQuantity\t\tDate\t\t\t\tStatus\t\tRaised by\n");
 
             while (fsc.hasNextLine()) {
                 reqID = fsc.next();
@@ -525,5 +451,42 @@ class PurchaseReq implements SalesObject{
             e.printStackTrace();
         }
         return count;
+    }
+
+
+    // Selected Display Requisition Method
+    static void selectedDisplayReq(int selection) {
+        String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID;
+        System.out.println("\nSelected Purchase Requisition:");
+        try (BufferedReader br = new BufferedReader(new FileReader("requisition.txt"))) {
+            String line; int currentRow = 0;
+
+            while ((line = br.readLine()) != null) {
+                currentRow++;
+
+                if (currentRow == selection + 2) {
+                    String[] data = line.split(" ");
+                    reqID = data[0];
+                    itemID = data[1];
+                    reqQuantity = Integer.parseInt(data[2]);
+                    reqStatus = Integer.parseInt(data[3]);
+                    reqDate = data[4];
+
+                    System.out.println("=============================================================================");
+                    System.out.println("#\tReq ID\t\tItem ID\t\tQuantity\tDate\t\t\t\tStatus\n");
+                    switch (reqStatus) {
+                        case 1 -> reqStatF = "Pending";
+                        case 2 -> reqStatF = "Approved";
+                        case 3 -> reqStatF = "Rejected";
+                    }
+                    System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\t" + reqDate + "\t\t\t" + reqStatF);
+                    System.out.println("=============================================================================");
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }
