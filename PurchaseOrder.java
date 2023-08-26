@@ -375,7 +375,7 @@ class PurchaseOrder implements SalesObject{
 
 
     // Purchase Order Approval
-    public void OrderApproval() {
+    public void OrderHandle() {
         String orderID = null; int orderQuantity = 0; int orderStatus; String orderDate = null; String itemID = null; String userID = null; String reqID = null; String supplierID = null;
         int count = selectiveDisplayOrder("Handle Purchase Order", 1, "Pending-");
         int selection; int selection2 = 0;
