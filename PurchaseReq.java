@@ -152,8 +152,7 @@ class PurchaseReq implements SalesObject{
                 int newReqStatus = Sc.nextInt();
                 Sc.nextLine();
 
-                int selection2 = selection + 1;
-                PurchaseReq.EditFileLine(selection2, newReqID, newItemID, newReqQuantity, newReqStatus, newReqDate, userID);
+                PurchaseReq.EditFileLine(selection, newReqID, newItemID, newReqQuantity, newReqStatus, newReqDate, userID);
                 ReplaceReq();
                 System.out.print("\nPress Enter to continue...");
                 Sc.nextLine();
@@ -196,7 +195,6 @@ class PurchaseReq implements SalesObject{
 
     // Delete Purchase Requisition Method
     public void Delete() {
-        String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID;
         int count = displayReq("Remove Purchase Requisition");
         int selection;
 
@@ -224,8 +222,7 @@ class PurchaseReq implements SalesObject{
                 System.out.print("\nConfirmation: ");
                 String confirmation = Sc.nextLine();
                 if (Objects.equals(confirmation, "YES")) {
-                    int selection2 = selection + 1;
-                    DeleteFileLine(selection2);
+                    DeleteFileLine(selection);
                     ReplaceReq();
                 } else {
                     System.out.println("Deletion cancelled.");
@@ -377,7 +374,7 @@ class PurchaseReq implements SalesObject{
 
     // Display Requisition List Method
     static int displayReq(String header) {
-        int count = 0;
+        int count = 1;
         try {
             String reqID; int reqQuantity; int reqStatus; String reqDate; String reqStatF = null; String itemID; String userID;
 
@@ -401,6 +398,7 @@ class PurchaseReq implements SalesObject{
                     case 1 -> reqStatF = "Pending-";
                     case 2 -> reqStatF = "Approved";
                     case 3 -> reqStatF = "Rejected";
+                    case 4 -> reqStatF = "Finalized";
                 }
                 System.out.println(count + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t\t" + reqDate + "\t\t\t" + reqStatF + "\t\t" + userID);
                 count++;
@@ -464,7 +462,7 @@ class PurchaseReq implements SalesObject{
             while ((line = br.readLine()) != null) {
                 currentRow++;
 
-                if (currentRow == selection + 2) {
+                if (currentRow == selection + 1) {
                     String[] data = line.split(" ");
                     reqID = data[0];
                     itemID = data[1];
@@ -478,6 +476,7 @@ class PurchaseReq implements SalesObject{
                         case 1 -> reqStatF = "Pending";
                         case 2 -> reqStatF = "Approved";
                         case 3 -> reqStatF = "Rejected";
+                        case 4 -> reqStatF = "Finalized";
                     }
                     System.out.println(selection + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity+ "\t\t\t" + reqDate + "\t\t\t" + reqStatF);
                     System.out.println("=============================================================================");
