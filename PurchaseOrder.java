@@ -181,6 +181,7 @@ class PurchaseOrder implements SalesObject{
     // Edit Purchase Order Method
     public void Edit(String userID) {
         int count = displayOrder("Edit Purchase Orders");
+        int orderQuantity = 0; String itemID = null; String reqID = null;
         int selection;
 
         do {
@@ -201,25 +202,40 @@ class PurchaseOrder implements SalesObject{
                 System.out.println("Invalid selection, please try again.");
             } else {
                 selectedDisplayOrder(selection);
+                
+                try (BufferedReader br = new BufferedReader(new FileReader("order.txt"))) {
+                    String line; int currentRow = 0;
+
+                    while ((line = br.readLine()) != null) {
+                        currentRow++;
+
+                        if (currentRow == selection + 1) {
+                            String[] data = line.split(" ");
+                            itemID = data[1];
+                            reqID = data[2];
+                            orderQuantity = Integer.parseInt(data[3]);
+                            break;
+                        }
+                    }
+                } catch (IOException e) {
+                    System.out.println("An error occurred.");
+                    e.printStackTrace();
+                }
 
                 //Call edit field method
                 System.out.print("Enter Order ID: ");
                 String newOrderID = Sc.nextLine();
-                System.out.print("Enter Item ID: ");
-                String newItemID = Sc.nextLine();
-                System.out.print("Enter Order Quantity: ");
-                int newOrderQuantity = Sc.nextInt();
-                Sc.nextLine();
                 System.out.print("Enter new date (DD-MM-YYYY): ");
                 String newOrderDate = Sc.nextLine();
                 System.out.println("\nPending  = 1");
-                System.out.println("Approved = 2");
-                System.out.println("Rejected = 3");
+                System.out.println("Completed = 2");
                 System.out.print("Enter Order Status: ");
                 int newOrderStatus = Sc.nextInt();
                 Sc.nextLine();
+                System.out.print("Enter new supplier ID: ");
+                String newSupplierID = Sc.nextLine();
 
-                PurchaseOrder.EditFileLine(selection, newOrderID, newItemID, newOrderQuantity, newOrderStatus, newOrderDate, userID);
+                PurchaseOrder.EditFileLine(selection, newOrderID, itemID, reqID, orderQuantity, newOrderStatus, newOrderDate, userID, newSupplierID);
                 ReplaceOrder();
                 System.out.print("\nPress Enter to continue...");
                 Sc.nextLine();
@@ -234,7 +250,7 @@ class PurchaseOrder implements SalesObject{
 
 
     // Edit method
-    static void EditFileLine(int selection, String orderID, String itemID, int orderQuantity, int orderStatus, String orderDate, String userID) {
+    static void EditFileLine(int selection, String orderID, String itemID, String reqID, int orderQuantity, int orderStatus, String orderDate, String userID, String supplierID) {
 
         try (BufferedReader rd = new BufferedReader(new FileReader("order.txt"));
              BufferedWriter wr = new BufferedWriter(new FileWriter("orderCarry.txt"))) {
@@ -249,7 +265,7 @@ class PurchaseOrder implements SalesObject{
                 if (count != selection) {
                     wr.write(line);
                 } else {
-                    wr.write(orderID + " " + itemID + " " + orderQuantity + " " + orderStatus + " " + orderDate + " " + userID);
+                    wr.write(orderID + " " + itemID + " " + reqID + " " + orderQuantity + " " + orderStatus + " " + orderDate + " " + userID + " " + supplierID);
                 }
                 count++;
             }
@@ -360,7 +376,7 @@ class PurchaseOrder implements SalesObject{
 
     // Purchase Order Approval
     public void OrderApproval() {
-        String orderID = null; int orderQuantity = 0; int orderStatus; String orderDate = null; String itemID = null; String userID = null;
+        String orderID = null; int orderQuantity = 0; int orderStatus; String orderDate = null; String itemID = null; String userID = null; String reqID = null; String supplierID = null;
         int count = selectiveDisplayOrder("Handle Purchase Order", 1, "Pending-");
         int selection; int selection2 = 0;
 
@@ -391,18 +407,20 @@ class PurchaseOrder implements SalesObject{
                         if (data.length >= 4) {
                             orderID = data[0];
                             itemID = data[1];
-                            orderQuantity = Integer.parseInt(data[2]);
-                            orderStatus = Integer.parseInt(data[3]);
-                            orderDate = data[4];
-                            userID = data[5];
+                            reqID = data[2];
+                            orderQuantity = Integer.parseInt(data[3]);
+                            orderStatus = Integer.parseInt(data[4]);
+                            orderDate = data[5];
+                            userID = data[6];
+                            supplierID = data[7];
                             selection2++;
                             if (orderStatus == 1) {
                                 currentRow++;
                                 if (currentRow == selection) {
-                                    System.out.println("=============================================================================");
-                                    System.out.println("#\tOrder ID\t\tItem ID\t\tQuantity\tDate\t\t\t\tStatus\n");
-                                    System.out.println(count + "\t" + orderID + "\t\t" + itemID + "\t\t" + orderQuantity + "\t\t\t" + orderDate + "\t\t\tPending");
-                                    System.out.println("=============================================================================");
+                                    System.out.println("=====================================================================================================================");
+                                    System.out.println("#\tOrder ID\tItem ID\t\tRequisition ID\t\tQuantity\t\tDate\t\t\tStatus\t\tSupplier ID\t\tRaised by\n");
+                                    System.out.println(selection + "\t" + orderID + "\t\t" + itemID + "\t\t" + reqID + "\t\t\t\t" + orderQuantity + "\t\t\t\t" + orderDate + "\t\tPending\t\t" + supplierID + "\t\t" + userID);
+                                    System.out.println("=====================================================================================================================");
                                     break;
                                 }
                             }
@@ -416,8 +434,7 @@ class PurchaseOrder implements SalesObject{
                 //Call edit field method
                 int selection3;
                 System.out.println("Pending : 1");
-                System.out.println("Approved: 2");
-                System.out.println("Rejected: 3");
+                System.out.println("Completed: 2");
                 try {
                     System.out.print("\nSelection: ");
                     selection3 = Sc.nextInt();
@@ -426,7 +443,7 @@ class PurchaseOrder implements SalesObject{
                 }
                 Sc.nextLine();
 
-                PurchaseOrder.EditFileLine(selection2, orderID, itemID, orderQuantity, selection3, orderDate, userID);
+                PurchaseOrder.EditFileLine(selection2, orderID, itemID, reqID, orderQuantity, selection3, orderDate, userID, supplierID);
                 ReplaceOrder();
                 System.out.print("\nPress Enter to continue...");
                 Sc.nextLine();
@@ -531,7 +548,7 @@ class PurchaseOrder implements SalesObject{
             while ((line = br.readLine()) != null) {
                 currentRow++;
 
-                if (currentRow == selection + 2) {
+                if (currentRow == selection + 1) {
                     String[] data = line.split(" ");
                     orderID = data[0];
                     itemID = data[1];
