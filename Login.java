@@ -62,7 +62,7 @@ public class Login {
 
         if (flag == 1){
             System.out.println("Username does not exists.");
-            userInfo = null;
+            return null;
         }
        
         return userInfo; 

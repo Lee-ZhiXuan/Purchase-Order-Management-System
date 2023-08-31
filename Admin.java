@@ -124,10 +124,9 @@ public class Admin extends User{
     }
     
     public void deleteUser(){
-        int flag = 1;
+        int flag = 1; List<String[]> userArray = read_file(); 
+        Scanner sc = new Scanner(System.in);
         while(flag == 1){
-            Scanner sc = new Scanner(System.in);
-            List<String[]> userArray = read_file();
             viewUser();
             System.out.print("User to delete: ");
             String deleteID = sc.nextLine();
@@ -279,7 +278,7 @@ public class Admin extends User{
         System.out.format("%s \n\n", string);
     } 
     
-    public List<String[]> read_file(){
+    private List<String[]> read_file(){
         String fileName = "User Info";
         List<String[]> userArray = new ArrayList<>();
         
