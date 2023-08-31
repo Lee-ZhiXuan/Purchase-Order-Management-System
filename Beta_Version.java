@@ -23,18 +23,18 @@ public class Beta_Version{
             switch (userPosition){
             case 1 -> {
                 System.out.println("\nWelcome Admin! \n");
-                Admin admin = new Admin(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
-                admin.AdminMenu();
+                User admin = new Admin(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
+                admin.user_menu();
             }
             case 2 -> {
                 System.out.println(" \nWelcome Sales Manager! \n");
-                SalesManager SalesManager = new SalesManager(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
-                SalesManager.SmMenu();
+                User SalesManager = new SalesManager(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
+                SalesManager.user_menu();
             }
             case 3 -> {
                 System.out.println("\nWelcome Purchase Manager! \n");
-                PurchaseManager PurchaseManager = new PurchaseManager(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
-                PurchaseManager.PmMenu();
+                User PurchaseManager = new PurchaseManager(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
+                PurchaseManager.user_menu();
             }
             case 4 -> {
                 System.out.println("Case 4. Something went wrong, please try it again.");
