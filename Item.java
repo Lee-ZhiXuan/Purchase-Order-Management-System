@@ -334,4 +334,32 @@ public class Item implements SalesObject{
             else return "Item ID not found";
         }
     }
+    
+    protected String getItemName(String itemid)
+    {
+        String itemname="placeholder";
+        File itemlist = new File("Item.txt");
+        try(Scanner itemscanner = new Scanner (itemlist);)
+        {
+            while (itemscanner.hasNextLine())
+            {
+                ItemID = itemscanner.next();
+                ItemName=itemscanner.next();
+                ItemPrice=itemscanner.nextDouble();
+                ItemStock=itemscanner.nextInt();
+                ItemLim=itemscanner.nextInt();
+                
+                if(itemid.equals(ItemID))
+                {
+                    itemname=ItemName;
+                    break;
+                }
+            }
+        }
+        catch(IOException Ex)
+        {
+            
+        }
+        return itemname;
+    }
 }
