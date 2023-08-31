@@ -193,8 +193,8 @@ public class DailySales extends Item{
                 DailySalesViewer(FileName);
                 
                 System.out.println("Confirm delete? This action is inreversible!\n\t1. Yes\n\t2. No(Exit)");
-                int exit=Sc.nextInt();
-                if(exit==1){
+                String exit=Sc.next();
+                if(exit.equals("1")){
                     String filepath="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales\\"+FileName+".txt";
                     File orifile = new File(filepath);
                     try(Scanner SalesScanner = new Scanner (filepath)){
