@@ -12,7 +12,6 @@ public class Item implements SalesObject{
     private int ItemStock;
     private int ItemLim;
     
-    
     Scanner Sc = new Scanner(System.in);
     
     Item()
@@ -24,13 +23,14 @@ public class Item implements SalesObject{
         System.out.println("\n=========================");
         System.out.println("\tItem List");
         System.out.println("=========================");
-        System.out.println("Item ID\t\tItem Name\t\tItem Price\t\tItem Stock\t\tItem Restock Limit\n");
+        System.out.println("Item ID\t\tItem Name\t\tItem Price\t\tItem Stock\t\tItem Restock Limit");
             
-        try{
+        File itemlist = new File("Item.txt");
+        
+            
+        try(Scanner itemscanner = new Scanner (itemlist);){
             
             
-            File itemlist = new File("Item.txt");
-            Scanner itemscanner = new Scanner (itemlist);
             
             while (itemscanner.hasNextLine())
             {
@@ -67,15 +67,17 @@ public class Item implements SalesObject{
         
         
         
-        
     }
+    
+    //unused but from interface for other class
+    @Override 
+    public void Create(String unused){}
     
     @Override
     public void Create()
     {
         while(true){
-            Item It = new Item();
-            It.View();
+            View();
             System.out.println();
             System.out.println("New Item Entry:\n");
             
@@ -92,10 +94,11 @@ public class Item implements SalesObject{
             System.out.println("Item stock:");
             ItemStock= Sc.nextInt();
             System.out.println("Item restock amount:");
-            ItemLim= Sc.nextInt();    
-            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim ;
+            ItemLim= Sc.nextInt();   
+            
+            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
         
-            It.WriteLine("Item.txt",Line);
+            WriteLine("Item.txt",Line);
             
         }
 
@@ -104,26 +107,21 @@ public class Item implements SalesObject{
     @Override
     public void Edit()
     {
-        while(true){
-            Item It = new Item();
-            It.View();
+        int tracker=0;
+        View();
+        while (true)
+        {
             System.out.println("Select Item ID to edit: \t(Input 0 to back)");
-            Sc.next();
-            String EditItemID= Sc.nextLine();
+            String EditItemID= Sc.nextLine();    
             if (EditItemID.equals("0"))
             {
                 break;
             }
             else
             {
-                
-                try{
+                File itemlist = new File("Item.txt");
+                try(Scanner itemscanner = new Scanner (itemlist);){
             
-                    File itemlist = new File("Item.txt");
-                    Scanner itemscanner = new Scanner (itemlist);
-            
-                    int counter=0;
-                    int tracker=0;
                     while (itemscanner.hasNextLine())
                     {
                         ItemID = itemscanner.next();
@@ -131,38 +129,51 @@ public class Item implements SalesObject{
                         ItemPrice=itemscanner.nextDouble();
                         ItemStock=itemscanner.nextInt();
                         ItemLim=itemscanner.nextInt();
-                        tracker++;
+                        String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+                    
+                    
                         if (EditItemID.equals(ItemID))
                         {
-                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim ;
-                            It.WriteLine("Buffer.txt",Line);
+                            tracker++;
+                            System.out.println("Original item info:");
+                            System.out.println(Line);
+                            System.out.println("Input edited info:");
+                            System.out.println("Item name:");
+                            ItemName= Sc.nextLine();
+                            System.out.println("Item price:");
+                            ItemPrice= Sc.nextDouble();
+                            System.out.println("Item stock:");
+                            ItemStock= Sc.nextInt();
+                            System.out.println("Item restock amount:");
+                            ItemLim= Sc.nextInt();
+                        
+                            Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+                            
                         } 
-                        else 
-                        {
-                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim ;
-                            It.WriteLine("Buffer.txt",Line);
-                            counter++;
-                        }
+                        
+                        WriteLine("Buffer.txt",Line);
                     }
-                    It.Rename();
-                    if (tracker!=counter)
+
+                }
+                catch(IOException Ex)
+                {
+                    System.out.println("Error with file handling.");
+                }
+                finally
+                {
+                    if(tracker!=0)
                     {
-                        System.out.println("Item listed as deleted.");
+                        System.out.println("Item ID edited");
                     }
                     else
                     {
                         System.out.println("Item ID not found");
                     }
                 
-                
-                }
-                catch(IOException Ex)
-                {
-                    System.out.println("Error with file handling.");
                 }
             }
-            
         }
+        Rename();
         
     }
     
@@ -171,8 +182,8 @@ public class Item implements SalesObject{
     {
         while(true)
         {
-            Item It = new Item();
-            It.View();
+            int tracker=0;
+            View();
             System.out.println("Delete item ID: \t(Input 0 to back)");
             String DelItem= Sc.nextLine();
             if (DelItem.equals("0"))
@@ -181,11 +192,8 @@ public class Item implements SalesObject{
             }
             else
             {
-                try{
-            
-                    File itemlist = new File("Item.txt");
-                    Scanner itemscanner = new Scanner (itemlist);
-                    
+                File itemlist = new File("Item.txt");
+                try(Scanner itemscanner = new Scanner (itemlist);){
             
                     while (itemscanner.hasNextLine())
                     {
@@ -197,26 +205,35 @@ public class Item implements SalesObject{
                         if (DelItem.equals(ItemID))
                         {
                             ItemLim=0;
-                    
-                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim ;
-                            It.WriteLine("Buffer.txt",Line);
+                            tracker++;
+                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+                            WriteLine("Buffer.txt",Line);
                     
                         }
                         else 
                         {
-                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim ;
-                            It.WriteLine("Buffer.txt",Line);
+                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+                            WriteLine("Buffer.txt",Line);
                         }
                     }
-                    It.Rename();
-                    System.out.println("Item listed as deleted.");
+                    
                     
                 }
                 catch(IOException Ex)
                 {
                     System.out.println("Error with file handling.");
                 }
-                
+                finally{
+                    Rename();
+                    if (tracker==0)
+                    {
+                        System.out.println("Item ID not found.");
+                    }
+                    else
+                    {
+                        System.out.println("Item listed as deleted.");
+                    }
+                }
             }
         }
         
@@ -224,7 +241,7 @@ public class Item implements SalesObject{
     
     
     
-    private void WriteLine(String filename, String Line)
+    protected static void WriteLine(String filename, String Line)
     {
         
         try(FileWriter Fw = new FileWriter(filename,true);
@@ -238,21 +255,20 @@ public class Item implements SalesObject{
         {
             System.out.println("Error with file handling.");
         }
-        
     }
     
-    private void Rename()
+    private static void Rename()
     {
         
         File orifile = new File("Item.txt");
 
         if (orifile.delete()) 
         {
-            System.out.println("Delete Successful.");
+            
         }
         else 
         {
-            System.out.println("Delete Failed");
+            System.out.println("Error with file handling(remove)");
         }
         
         File tempfile = new File("Buffer.txt");
@@ -263,14 +279,59 @@ public class Item implements SalesObject{
         
         if(flag==true)
         {
-            System.out.println("File renamed successfully.");
+            
         }
         else
         {
-            System.out.println("Error renaming file");
+            System.out.println("Error with file handling(rename)");
         }
         
     }
     
-    
+    protected String StockUpdate(String itemId, int stock, boolean mode)
+    {
+        int tracker=0;
+        
+        File itemlist = new File("Item.txt");
+        try(Scanner itemscanner = new Scanner (itemlist);)
+        {
+            while (itemscanner.hasNextLine())
+            {
+                ItemID = itemscanner.next();
+                ItemName=itemscanner.next();
+                ItemPrice=itemscanner.nextDouble();
+                ItemStock=itemscanner.nextInt();
+                ItemLim=itemscanner.nextInt();
+                String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;                
+                if (itemId.equals(ItemID))
+                {
+                    tracker++;
+                    if (mode==true)
+                    {
+                        ItemStock=ItemStock+stock;
+                    }
+                    else
+                    {
+                        ItemStock=ItemStock-stock;
+                    }
+                    
+                    Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+                }
+                WriteLine("Buffer.txt",Line);
+            }
+        }
+        catch(IOException Ex)
+        {
+            System.out.println("Error with file handling.");
+        }
+        finally
+        {
+            Rename();
+            if(tracker!=0)
+            {
+                return "Stock updated.";
+            }
+            else return "Item ID not found";
+        }
+    }
 }
