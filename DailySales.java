@@ -82,7 +82,7 @@ public class DailySales extends Item{
                 System.out.println("Input sales amount: ");
                 sales_amount=Sc.nextInt();
                 String Line= ItemID+" "+getItemName(ItemID)+" "+sales_amount;
-                WriteSalesLine(filename,Line);
+                WriteLine(filename,Line);
                 System.out.println(StockUpdate(ItemID,sales_amount,false));
             }
         }
@@ -93,9 +93,10 @@ public class DailySales extends Item{
     public void Edit()
     {       
         ListDir();
-        System.out.println("Select an entry to view(Input date as shown):\t(input 0 to back)");
+        System.out.println("Select an entry to edit(Input date as shown):\t(input 0 to back)");
         FileName = Sc.next();
         String FilePath= DIRNAME+FileName+".txt";
+        String BufferFilePath= DIRNAME+"Buffer.txt";
         if (FileName.equals("0"))
         {
             
@@ -110,63 +111,57 @@ public class DailySales extends Item{
             else
             {
                 DailySalesViewer(FileName);
-                File DailySalesList = new File(FilePath);
-                System.out.println("1. Edit sales entry\n(Input any other value to exit.)");
+                File orifile = new File(FilePath);
+                System.out.println("1. Edit sales amount\n2. Add new item sales\n(Input any other integer value to exit.)");
                 
                 int act= Sc.nextInt();
-                if (act==1){
-                    Item It= new Item();
-                    It.View();
-                    try(Scanner SalesScanner = new Scanner (DailySalesList);){
-                            
-                        while (SalesScanner.hasNextLine())
-                        {
-                            ItemID=SalesScanner.next();
-                            ItemName=SalesScanner.next();
-                            sales_amount=SalesScanner.nextInt();
-                            System.out.println("Item ID: ");
-                            String NewItemID= Sc.next();
-                            System.out.println("Sales amount: ");
-                            int new_sales_amount=Sc.nextInt();
+                switch (act)
+                {
+                    case 1 -> {
+                        
+                        
+                        try(Scanner SalesScanner = new Scanner (orifile)){
+                            while (SalesScanner.hasNextLine())
+                            {
+                                ItemID=SalesScanner.next();
+                                ItemName=SalesScanner.next();
+                                sales_amount=SalesScanner.nextInt();
                                 
-                            if (NewItemID.equals(ItemID))
-                            {
-                                if (sales_amount==new_sales_amount)
-                                {
-                                    
-                                }
-                                else if (sales_amount>new_sales_amount)
-                                {
-                                    StockUpdate(ItemID,sales_amount-new_sales_amount, true);
-                                }
-                                else 
-                                {
-                                    StockUpdate(ItemID, new_sales_amount-sales_amount,false);
-                                }
-                                String Line=ItemID+" "+ItemName+" "+new_sales_amount;
-                                FileName=DIRNAME+"Buffer.txt";
-                                WriteLine(FileName,Line);
-                            }
-                            else 
-                            {
-                                String Line=NewItemID+" "+ItemName+" "+sales_amount;
-                                FileName=DIRNAME+"Buffer.txt";
-                                WriteLine(FileName,Line);
+                                System.out.println("Item ID: "+ItemID+"\tItem name: "+ItemName+"\nInitial sales amount: "+sales_amount);
+                                System.out.println("Updated sales amount: ");
+                                int updated_sales_amount=Sc.nextInt();
+                                
+                                String Line=ItemID+" "+ItemName+" "+updated_sales_amount;
+                                
+                                WriteLine(BufferFilePath,Line);
+                                System.out.println(StockUpdate(ItemID,updated_sales_amount-sales_amount,false));
+                                
                             }
                         }
-                            
-
+                        catch(IOException Ex)
+                        {
+                            System.out.println("error with scanner");
+                        }
+                        finally
+                        {
+                            Rename(FilePath);
+                        }
                     }
-                    catch(IOException Ex)
-                    {
-                        System.out.println("Error with file scanner.");
+                        
+                    case 2 ->{
+                        Item it=new Item();
+                        it.View();
+                        System.out.println("New Item ID: ");
+                        ItemID=Sc.next();
+                        System.out.println("Sales amount: ");
+                        sales_amount=Sc.nextInt();
+                        String Line= ItemID+" "+getItemName(ItemID)+" "+sales_amount;
+                        WriteLine(FilePath,Line);
+                        System.out.println(StockUpdate(ItemID,sales_amount,false));
                     }
-                    finally
-                    {
-                        Rename(DIRNAME+FileName+".txt");
-                    }
+                    default ->{}
+                        
                 }
-                else{}
             }
             
         }
@@ -197,7 +192,7 @@ public class DailySales extends Item{
                 if(exit.equals("1")){
                     String filepath="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales\\"+FileName+".txt";
                     File orifile = new File(filepath);
-                    try(Scanner SalesScanner = new Scanner (filepath)){
+                    try(Scanner SalesScanner = new Scanner (orifile)){
                         while (SalesScanner.hasNextLine())
                         {
                             ItemID=SalesScanner.next();
@@ -207,7 +202,7 @@ public class DailySales extends Item{
                             System.out.println(StockUpdate(ItemID,sales_amount, true));
                         }
                     }
-                    catch(java.util.InputMismatchException e)
+                    catch(IOException Ex)
                     {
                         System.out.println("Error");
                     }
@@ -296,20 +291,6 @@ public class DailySales extends Item{
         catch(IOException Ex)
         {
             System.out.println("Error reading file.");
-        }
-    }
-    
-    protected static void WriteSalesLine(String filename, String Line)
-    {
-        try(FileWriter Fw = new FileWriter(filename,true);BufferedWriter Bw= new BufferedWriter(Fw);)
-        {
-            Bw.newLine();
-            Bw.write(Line);
-            Bw.flush();
-        }
-        catch(IOException Ex)
-        {
-            System.out.println("Error with file handling.(Write)");
         }
     }
     
