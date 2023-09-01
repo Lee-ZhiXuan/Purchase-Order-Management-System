@@ -16,6 +16,7 @@ public class DailySales extends Item{
     private String FileName;
     
     final static String DIRNAME="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales\\";
+    final static String DIR="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales";
     DailySales(){}
     
     @Override
@@ -190,7 +191,7 @@ public class DailySales extends Item{
                 System.out.println("Confirm delete? This action is inreversible!\n\t1. Yes\n\t2. No(Exit)");
                 String exit=Sc.next();
                 if(exit.equals("1")){
-                    String filepath="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales\\"+FileName+".txt";
+                    String filepath=DIRNAME+FileName+".txt";
                     File orifile = new File(filepath);
                     try(Scanner SalesScanner = new Scanner (orifile)){
                         while (SalesScanner.hasNextLine())
@@ -226,7 +227,7 @@ public class DailySales extends Item{
     private static void ListDir()
     {
         System.out.println("Daily sales report dates:");
-        File salesdir= new File("C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales");
+        File salesdir= new File(DIR);
         String[]s = salesdir.list();
         for(String s1:s)
         {
@@ -242,7 +243,7 @@ public class DailySales extends Item{
     private static boolean CheckDir(String choice)
     {
         boolean stat=false;
-        File salesdir= new File("C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales");
+        File salesdir= new File(DIR);
         String[]s = salesdir.list();
         for(String s1:s)
         {
