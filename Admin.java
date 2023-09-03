@@ -1,4 +1,4 @@
-package beta_version;
+package Java_OOP_Assignment;
 
 import java.io.*;
 import java.util.*;
@@ -13,7 +13,7 @@ public class Admin extends User{
     
     @Override
     void menu(){
-        boolean not_exit = true;
+        boolean exit = false;
         do{
             Scanner sc = new Scanner(System.in); int choice;
             System.out.println("""
@@ -38,7 +38,7 @@ public class Admin extends User{
                 case 3 -> deleteUser();
                 case 4 -> viewUser();
                 case 0 ->{
-                    not_exit = false;
+                    exit = true;
                     System.out.println("Logging out ...");
                 }
                 default -> System.out.println("Please enter a valid choice.");
@@ -48,7 +48,7 @@ public class Admin extends User{
                 System.out.println("Invalid input. Please enter an integer.");
                 sleep();
             }
-        } while (not_exit);
+        } while (exit != true);
     }
     
     public void addUser(){
@@ -65,10 +65,13 @@ public class Admin extends User{
         System.out.print("Password: ");
         userInfo[2] = sc.nextLine();
         System.out.print("""
-                           Position
+                           ====================
+                                 Position
+                           ====================
                             1. Admin
                             2. Sales Manager
                             3. Purchase Manager
+                           ====================
                            """);
         while (flag == 1){
             try{
@@ -80,8 +83,10 @@ public class Admin extends User{
                 case 3 -> "PM";
                 default -> null;    
                 };
-                if (userInfo[3] == null)
+                if (userInfo[3] == null){
                     System.out.println("Please enter a valid choice.");
+                    sleep();
+                }
                 else
                     flag = 0;
             }

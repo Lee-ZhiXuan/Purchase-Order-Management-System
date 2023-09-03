@@ -1,4 +1,4 @@
-package beta_version;
+package Java_OOP_Assignment;
 
 public abstract class User {
 

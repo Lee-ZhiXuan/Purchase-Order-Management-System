@@ -1,4 +1,4 @@
-package beta_version;
+package Java_OOP_Assignment;
 
 import java.util.*;
 import java.io.*;
@@ -7,6 +7,7 @@ public class Login {
     
     String userID, userPass;
     String filePath = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Credentials\\User Credentials.txt\\";
+    
     public Login(){}
     
     public void enter_userInfo(){
@@ -18,15 +19,11 @@ public class Login {
         Scanner sc = new Scanner(System.in);
         System.out.print("User ID: ");
         userID = sc.nextLine();
-        
-        // sc.nextLine();
-        
         System.out.print("Password: ");
         userPass = sc.nextLine();
     }
 
     public String[] check_account(){
-        String[] userInfo = new String[4] ;
         List<String[]> userArray = new ArrayList<>(); 
         
         try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
@@ -45,16 +42,10 @@ public class Login {
             if (userID.equals(user[0])){
                 flag = 0;
                 
-                if (userPass.equals(user[2])){
-                    userInfo[0] = user[0];
-                    userInfo[1] = user[1];
-                    userInfo[2] = user[2];
-                    userInfo[3] = user[3];
-                    return userInfo;
-                }
+                if (userPass.equals(user[2]))
+                    return user;
                 else{
                     System.out.println("Incorrect Password.");
-                    userInfo = null;
                     break;
                 }
             }
@@ -62,9 +53,8 @@ public class Login {
 
         if (flag == 1){
             System.out.println("Username does not exists.");
-            return null;
         }
-       
-        return userInfo;
+        
+        return null;
     }
 }
