@@ -1,76 +1,159 @@
 package beta_version;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class PurchaseManager extends User{
+    
+    Scanner sc = new Scanner(System.in);
+    
+    PurchaseReq pr = new PurchaseReq(); PurchaseOrder po = new PurchaseOrder(); Supplier sp = new Supplier(); Item i = new Item();
     
     public PurchaseManager(String userID, String userName, String password, String position) {
         super(userID, userName, password, position);
     }
-    
+
     @Override
-    void user_menu(){
-        boolean not_exit = true;
+    void menu(){
+        boolean exit = false;
+        
         do{
-        Scanner sc = new Scanner(System.in); int choice;
         System.out.println("""
-                           =======
-                           PM Menu
-                           =======
-                           1. Item List
-                           2. Manage Supplier
-                           3. Purchase Requisition
-                           4. Purchase Order
+                           =============================
+                                      PM Menu
+                           =============================
+                           1. View Item
+                           2. Supplier Menu
+                           3. Purchase Requisition Menu
+                           4. Purchase Order Menu
                            
-                           5. Exit
+                           0. Return
+                           =============================
                            """);
         System.out.print("Choice: ");
-        choice = sc.nextInt();
-
-        switch (choice){
-            case 1 -> {
-               itemList();
+        
+        try{
+            int choice = sc.nextInt();
+            switch (choice){
+                case 1 -> i.view();
+                case 2 -> supplierList();           
+                case 3 -> purchaseRequisitionMenu();            
+                case 4 -> purchaseOrderMenu();          
+                case 0 ->{
+                    exit = true;
+                    System.out.println("Logging out ...");
+                }
+                default -> System.out.println("Please enter a valid choice.");
             }
-                
-            case 2 -> {
-               supplierList();
-            }
-            
-            case 3 -> {
-               requisitionMenu();
-            }
-            
-            case 4 -> {
-               purchaseOrder();
-            }
-            
-            case 5 ->{
-                not_exit = false;
-                System.out.println("Logging out ...");
-            }
-            
-            default -> {
-                System.out.println("Please enter a valid choice.");
-            }
-            
+        }
+        catch (InputMismatchException e){
+            System.out.println("Invalid input. Please enter an integer.");
         }
         
-        } while (not_exit);
-    }
-    
-    public void itemList(){
-        System.out.println("Item List");
+        } while (exit != true);
     }
     
     public void supplierList(){
-        System.out.println("Supplier Menu");
+        int choice; boolean exit = false;
+         do{
+
+            System.out.println("""
+                       =============
+                       Supplier Menu
+                       =============
+                       1. View
+                       2. Create
+                       3. Edit
+                       4. Delete
+
+                       0. Return
+                       =============
+                       """);
+            System.out.print("Choice: ");
+            
+            try{
+                choice = sc.nextInt();
+                switch(choice){
+                    case 0 -> exit = true;
+                    case 1 -> sp.viewSupplier();
+                    case 2 -> sp.addSupplier();
+                    case 3 -> sp.editSupplier();
+                    case 4 -> sp.deleteSupplier();
+                    default -> System.out.println("Please enter a valid input.");
+                }
+            }
+            catch(InputMismatchException e){
+                System.out.println("Invalid input. Please enter an integer.");
+            }
+            
+        }while(exit != true);
     }
     
-    public void requisitionMenu(){
-        System.out.println("Requisition Menu");
+    public void purchaseRequisitionMenu(){
+        boolean exit  = false;
+        
+        do{
+           System.out.println("""
+                           =========================
+                           Purchase Requisition Menu
+                           =========================
+                           1. View
+                           2. Approval
+                           
+                           0. Return
+                           =========================
+                           """);
+            System.out.print("Choice: ");
+            
+            try{
+                int choice = sc.nextInt();
+                switch (choice){
+                    case 1 -> pr.view();
+                    case 2 -> pr.ReqApproval();
+                    case 0 -> exit = true;
+                    default -> System.out.println("Please enter a valid choice.");
+                }
+            }
+            catch(InputMismatchException e){
+                System.out.println("Invalid input. Please enter an integer.");
+            }
+            
+        }while (exit != true);
+        
     }
     
-    public void purchaseOrder(){
-        System.out.println("Purchase Order");
+    public void purchaseOrderMenu(){
+        boolean exit = false;
+        do{
+            System.out.println("""
+                       ===================
+                       Purchase Order Menu
+                       ===================
+                       1. View
+                       2. Create
+                       3. Edit
+                       4. Delete
+
+                       0. Return
+                       ===================
+                       """);
+            System.out.print("Choice: ");
+            
+            try{
+                int choice = sc.nextInt();
+                switch (choice){
+                    case 0 -> exit = true;
+                    case 1 -> po.view();
+                    case 2 -> po.create(getID());
+                    case 3 -> po.edit(getID());
+                    case 4 -> po.delete();
+                    default -> System.out.println("Please enter a valid choice.");
+                }
+            }
+            catch(InputMismatchException e){
+                System.out.println("Invalid input. Please enter an integer.");
+                sleep(); 
+            }
+            
+        }while(exit != true);
     }
 }

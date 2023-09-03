@@ -24,17 +24,17 @@ public class Beta_Version{
             case 1 -> {
                 System.out.println("\nWelcome Admin! \n");
                 User admin = new Admin(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
-                admin.user_menu();
+                admin.menu();
             }
             case 2 -> {
                 System.out.println(" \nWelcome Sales Manager! \n");
                 User SalesManager = new SalesManager(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
-                SalesManager.user_menu();
+                SalesManager.menu();
             }
             case 3 -> {
                 System.out.println("\nWelcome Purchase Manager! \n");
                 User PurchaseManager = new PurchaseManager(userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
-                PurchaseManager.user_menu();
+                PurchaseManager.menu();
             }
             case 4 -> {
                 System.out.println("Case 4. Something went wrong, please try it again.");

@@ -6,7 +6,7 @@ import java.io.*;
 public class Login {
     
     String userID, userPass;
-    
+    String filePath = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Credentials\\User Credentials.txt\\";
     public Login(){}
     
     public void enter_userInfo(){
@@ -26,10 +26,10 @@ public class Login {
     }
 
     public String[] check_account(){
-        String fileName = "User Info"; String[] userInfo = new String[4] ;
+        String[] userInfo = new String[4] ;
         List<String[]> userArray = new ArrayList<>(); 
         
-        try (BufferedReader buffer = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = buffer.readLine()) != null) {
                 String[] userCredentials = line.split("\\s+");
@@ -50,7 +50,7 @@ public class Login {
                     userInfo[1] = user[1];
                     userInfo[2] = user[2];
                     userInfo[3] = user[3];
-                    break;
+                    return userInfo;
                 }
                 else{
                     System.out.println("Incorrect Password.");
@@ -65,6 +65,6 @@ public class Login {
             return null;
         }
        
-        return userInfo; 
+        return userInfo;
     }
 }

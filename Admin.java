@@ -5,57 +5,49 @@ import java.util.*;
 
 public class Admin extends User{
     
+    String filePath = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Credentials\\User Credentials.Txt\\";
+    
     public Admin(String userID, String userName, String password, String position){
         super(userID,userName,password,position);
     }
     
     @Override
-    void user_menu(){
+    void menu(){
         boolean not_exit = true;
         do{
-        Scanner sc = new Scanner(System.in); int choice;
-        System.out.println("""
-                           ====
-                           Menu
-                           ====
-                           1. Create user
-                           2. Edit user
-                           3. Delete user
-                           4. View user
-                           
-                           5. Exit
-                           """);
-        System.out.print("Choice: ");
-        choice = sc.nextInt();
+            Scanner sc = new Scanner(System.in); int choice;
+            System.out.println("""
+                               ==============
+                                    Menu
+                               ==============
+                               1. Create user
+                               2. Edit user
+                               3. Delete user
+                               4. View user
 
-        switch (choice){
-            case 1 -> {
-                addUser();
+                               0. Exit
+                               ===============
+                               """);
+            System.out.print("Choice: ");
+
+            try{
+                choice = sc.nextInt();
+                switch (choice){
+                case 1 -> addUser();
+                case 2 -> editUser();
+                case 3 -> deleteUser();
+                case 4 -> viewUser();
+                case 0 ->{
+                    not_exit = false;
+                    System.out.println("Logging out ...");
+                }
+                default -> System.out.println("Please enter a valid choice.");
+                }
+            } 
+            catch (InputMismatchException e){
+                System.out.println("Invalid input. Please enter an integer.");
+                sleep();
             }
-                
-            case 2 -> {
-                editUser();
-            }
-            
-            case 3 -> {
-                deleteUser();
-            }
-            
-            case 4 -> {
-                viewUser();
-            }
-            
-            case 5 ->{
-                not_exit = false;
-                System.out.println("Logging out ...");
-            }
-            
-            default -> {
-                System.out.println("Please enter a valid choice.");
-            }
-            
-        }
-        
         } while (not_exit);
     }
     
@@ -63,10 +55,10 @@ public class Admin extends User{
         Scanner sc = new Scanner(System.in); int choice; String[] userInfo = new String[4]; int flag = 1;
         List<String[]> userArray = read_file();
       
-        System.out.println("""
-                           ========
-                           New User
-                           ========
+        System.out.print("""
+                           ============
+                             New User
+                           ============
                            """);
         System.out.print("Username: ");
         userInfo[1] = sc.nextLine();
@@ -79,32 +71,35 @@ public class Admin extends User{
                             3. Purchase Manager
                            """);
         while (flag == 1){
-            System.out.print("Choice: ");
-            choice = sc.nextInt();
-            userInfo[3] = switch (choice) {
-            case 1 -> "Admin";
-            case 2 -> "SM";
-            case 3 -> "PM";
-            default -> "X";
-            };
-        
-            if (userInfo[3].equals("X"))
-                System.out.println("Please enter a valid choice.");
-            else
-                flag = 0;           
+            try{
+                System.out.print("Choice: ");
+                choice = sc.nextInt();
+                userInfo[3] = switch (choice) {
+                case 1 -> "Admin";
+                case 2 -> "SM";
+                case 3 -> "PM";
+                default -> null;    
+                };
+                if (userInfo[3] == null)
+                    System.out.println("Please enter a valid choice.");
+                else
+                    flag = 0;
+            }
+            catch(InputMismatchException e){
+                System.out.println("Invalid input. Please enter an integer.");
+                sleep();
+            }          
         }
         
-        String[] last_user = userArray.get(userArray.size() - 1);
-        String numericPart = last_user[0].substring(1);
-        int numericValue = Integer.parseInt(numericPart) + 1;
-        String newNumericPart = String.format("%02d", numericValue);
-        userInfo[0] = "U" + newNumericPart;
+        String[] lastUser = userArray.get(userArray.size() - 1); String lastID = lastUser[0].substring(1);
+        int newValue = Integer.parseInt(lastID) + 1; String newID = String.format("%02d", newValue);
+        
+        userInfo[0] = "U" + newID;
 
-        String fileName = "User Info";
         try {
             try ( 
                 // Create a FileWriter in append mode
-                FileWriter fileWriter = new FileWriter(fileName, true); 
+                FileWriter fileWriter = new FileWriter(filePath, true); 
                 // Create a BufferedWriter for efficient writing
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
                 // Write the userInfo array to the file
@@ -126,6 +121,7 @@ public class Admin extends User{
     public void deleteUser(){
         int flag = 1; List<String[]> userArray = read_file(); 
         Scanner sc = new Scanner(System.in);
+        
         while(flag == 1){
             viewUser();
             System.out.print("User to delete: ");
@@ -149,11 +145,10 @@ public class Admin extends User{
                 return;
             }
             
-            String fileName = "User Info";
             try {
                 // Create a BufferedWriter for efficient writing
                 try ( 
-                    FileWriter fileWriter = new FileWriter(fileName); 
+                    FileWriter fileWriter = new FileWriter(filePath); 
                     // Create a BufferedWriter for efficient writing
                     var bufferedWriter = new BufferedWriter(fileWriter)) {
                     // Write the userInfo array to the file
@@ -212,17 +207,20 @@ public class Admin extends User{
                            """);
                 int flag = 1;
                 while (flag == 1){
-                    System.out.print("Choice: ");
-                    int choice = sc.nextInt();
+                    try{
+                        System.out.print("Choice: ");
+                        int choice = sc.nextInt();
+                        user[3] = switch (choice) {
+                        case 1 -> "Admin";
+                        case 2 -> "SM";
+                        case 3 -> "PM";
+                        default -> null;
+                        };
+                    }
+                    catch(InputMismatchException e){
+                    }
                     
-                    user[3] = switch (choice) {
-                    case 1 -> "Admin";
-                    case 2 -> "SM";
-                    case 3 -> "PM";
-                    default -> "X";
-                    };
-                    
-                    if (user[3].equals("X"))
+                    if (user[3] == null)
                         System.out.println("Please enter a valid choice.");
                     else
                         flag = 0;
@@ -234,11 +232,10 @@ public class Admin extends User{
             System.out.println("ID does not exists. Please enter a valid ID.\n");
         }
         else{
-            String fileName = "User Info";
             try {
                 try ( 
                     // Create a FileWriter in append mode
-                    FileWriter fileWriter = new FileWriter(fileName); 
+                    FileWriter fileWriter = new FileWriter(filePath); 
                     // Create a BufferedWriter for efficient writing
                     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
                         // Write the userInfo array to the file
@@ -261,6 +258,8 @@ public class Admin extends User{
         List<String[]> userArray = read_file();
         
         int i = 1; String string = "=".repeat(50);
+        
+        System.out.println();
         for (String[] user : userArray) {
             if (i == 1){
                  System.out.format("""
@@ -274,15 +273,13 @@ public class Admin extends User{
             System.out.format("User %d: %-10s %-10s %-10s %-10s \n", i, user[0], user[1], user[2], user[3]);
             i++;
         }
-        
         System.out.format("%s \n\n", string);
     } 
     
     private List<String[]> read_file(){
-        String fileName = "User Info";
         List<String[]> userArray = new ArrayList<>();
         
-        try (BufferedReader buffer = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = buffer.readLine()) != null) {
                 String[] userCredentials = line.split("\\s+");
