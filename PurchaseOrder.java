@@ -152,8 +152,16 @@ class PurchaseOrder implements SalesObject{
                             }
                             System.out.print("Enter Order Date (DD-MM-YYYY): ");
                             orderDate = Sc.nextLine();
+                            Supplier supplier = new Supplier();
+                            supplier.searchSupplier(itemID);
                             System.out.print("Enter Supplier ID: ");
                             supplierID = Sc.nextLine();
+                            if (!supplier.checkSupplier(itemID)) {
+                                System.out.println("Invalid Supplier.");
+                                System.out.print("\nPress Enter to return...");
+                                Sc.nextLine();
+                                break;
+                            }
                             
                             orderQuantity = reqQuantity;
 

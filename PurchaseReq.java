@@ -93,6 +93,8 @@ class PurchaseReq implements SalesObject{
                         Sc.nextLine();
                         break;
                     }
+                    Item item = new Item();
+                    item.viewRestockItems();
                     System.out.print("Enter Item ID: ");
                     itemID = Sc.nextLine();
                     System.out.print("Enter Requisition Quantity: ");
