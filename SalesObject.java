@@ -1,17 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package SalesObjects;
+package Java_OOP_Assignment;
 
-/**
- *
- * @author bryan
- */
 interface SalesObject {
-    
-    abstract public void View();
-    abstract public void Create();
-    abstract public void Delete();
-    abstract public void Edit();
+    abstract public void view();
+    abstract public void create();
+    abstract public void delete();
+    abstract public void edit();
 }

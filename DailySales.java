@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package SalesObjects;
+package Java_OOP_Assignment;
 
 import java.io.*;
 import java.util.*;
@@ -15,20 +11,19 @@ public class DailySales extends Item{
     private int sales_amount;
     private String FileName;
     
-    final static String DIRNAME="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales\\";
-    final static String DIR="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales";
-    DailySales(){}
+    final static String DIRNAME="C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Daily_Sales\\";
+    final static String DIR="C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Daily_Sales";
+
+    public DailySales(){}
     
     @Override
-    public void View()
+    public void view()
     {
         ListDir();
         System.out.println("Select an entry to view(Input date as shown):\t(input 0 to back)");
         FileName = Sc.next();
         if (FileName.equals("0"))
-        {
-            
-        }
+        {}
         else 
         {
             if (CheckDir(FileName)==true)
@@ -48,15 +43,12 @@ public class DailySales extends Item{
                     break;
                 }
             }
-        }
-        
+        }  
     }
     
-    
     @Override
-    public void Create()
-    {
-        
+    public void create()
+    {      
         Date thisdate = new Date();
         SimpleDateFormat day= new SimpleDateFormat("dd");
         SimpleDateFormat month = new SimpleDateFormat("MM");
@@ -67,7 +59,7 @@ public class DailySales extends Item{
             
         System.out.println();
         Item It= new Item();
-        It.View();
+        It.view();
         System.out.println("Create daily sales entry for today("+date+"): ");
         while (true)
         {
@@ -86,25 +78,20 @@ public class DailySales extends Item{
                 WriteLine(filename,Line);
                 System.out.println(StockUpdate(ItemID,sales_amount,false));
             }
-        }
-        
+        }        
     }
     
     @Override
-    public void Edit()
+    public void edit()
     {       
         ListDir();
         System.out.println("Select an entry to edit(Input date as shown):\t(input 0 to back)");
         FileName = Sc.next();
         String FilePath= DIRNAME+FileName+".txt";
         String BufferFilePath= DIRNAME+"Buffer.txt";
-        if (FileName.equals("0"))
-        {
-            
-        }
+        if (FileName.equals("0")){}
         else 
         {
-            
             if (CheckDir(FileName)==false)
             {
                 System.out.println("Entry not found");
@@ -119,8 +106,6 @@ public class DailySales extends Item{
                 switch (act)
                 {
                     case 1 -> {
-                        
-                        
                         try(Scanner SalesScanner = new Scanner (orifile)){
                             while (SalesScanner.hasNextLine())
                             {
@@ -135,8 +120,7 @@ public class DailySales extends Item{
                                 String Line=ItemID+" "+ItemName+" "+updated_sales_amount;
                                 
                                 WriteLine(BufferFilePath,Line);
-                                System.out.println(StockUpdate(ItemID,updated_sales_amount-sales_amount,false));
-                                
+                                System.out.println(StockUpdate(ItemID,updated_sales_amount-sales_amount,false));  
                             }
                         }
                         catch(IOException Ex)
@@ -147,11 +131,10 @@ public class DailySales extends Item{
                         {
                             Rename(FilePath);
                         }
-                    }
-                        
+                    }   
                     case 2 ->{
                         Item it=new Item();
-                        it.View();
+                        it.view();
                         System.out.println("New Item ID: ");
                         ItemID=Sc.next();
                         System.out.println("Sales amount: ");
@@ -160,24 +143,19 @@ public class DailySales extends Item{
                         WriteLine(FilePath,Line);
                         System.out.println(StockUpdate(ItemID,sales_amount,false));
                     }
-                    default ->{}
-                        
+                    default ->{}      
                 }
             }
-            
         }
     }
     
     @Override
-    public void Delete()
+    public void delete()
     {
         ListDir();
         System.out.println("Select an entry to view(Input date as shown):\t(input 0 to back)");
         FileName = Sc.next();
-        if (FileName.equals("0"))
-        {
-            
-        }
+        if (FileName.equals("0")){}
         else 
         {
             if (CheckDir(FileName)==false)
@@ -215,13 +193,10 @@ public class DailySales extends Item{
                     {
                         System.out.println("Error with file handling(remove)");
                     }
-                    
-                    
+       
                 }
-            }
-            
-        }
-        
+            }        
+        } 
     }
     
     private static void ListDir()
@@ -229,6 +204,7 @@ public class DailySales extends Item{
         System.out.println("Daily sales report dates:");
         File salesdir= new File(DIR);
         String[]s = salesdir.list();
+        
         for(String s1:s)
         {
             File f= new File(salesdir,s1);
@@ -256,8 +232,7 @@ public class DailySales extends Item{
                     stat = true;
                 }
             } 
-        }
-        
+        } 
         return stat;
     }
     
@@ -279,15 +254,12 @@ public class DailySales extends Item{
                 if(ItemName.length()<=7)
                 {
                     System.out.println(ItemID+"\t\t"+ItemName+"\t\t\t"+sales_amount);
-                
                 }
                 else 
                 {
                     System.out.println(ItemID+"\t\t"+ItemName+"\t\t"+sales_amount);
-                }
-                
-            }
-            
+                }     
+            }    
         }
         catch(IOException Ex)
         {
@@ -296,14 +268,10 @@ public class DailySales extends Item{
     }
     
     private static void Rename(String FilePath)
-    {
-        
+    {      
         File orifile = new File(FilePath);
 
-        if (orifile.delete()) 
-        {
-            
-        }
+        if (orifile.delete()){}
         else 
         {
             System.out.println("Error with file handling(remove)");
@@ -316,17 +284,12 @@ public class DailySales extends Item{
         
         boolean flag=tempfile.renameTo(rename);
         
-        if(flag==true)
-        {
-            
-        }
+        if(flag==true){}
         else
         {
             System.out.println("Error with file handling(rename)");
-        }
-        
-    }
-    
+        }      
+    }   
 }   
 
     
