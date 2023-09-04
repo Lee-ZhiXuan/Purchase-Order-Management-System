@@ -79,7 +79,8 @@ public class Item implements SalesObject{
             System.out.println("Item stock:");
             ItemStock= Sc.nextInt();
             System.out.println("Item restock amount:");
-            ItemLim= Sc.nextInt();   
+            ItemLim= Sc.nextInt();
+            Sc.nextLine();
             
             String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
         
@@ -129,6 +130,8 @@ public class Item implements SalesObject{
                             System.out.println("Item restock amount:");
                             ItemLim= Sc.nextInt();
                         
+                            Sc.nextLine();
+                            
                             Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim; 
                         } 
                         
@@ -321,5 +324,54 @@ public class Item implements SalesObject{
         catch(IOException Ex){}
         
         return itemname;
+    }
+    
+    public void viewRestockItems()
+    {
+        System.out.println("\n=========================");
+        System.out.println("\tItem List with low stock");
+        System.out.println("=========================");
+        System.out.println("Item ID\t\tItem Name\t\tItem Price\t\tItem Stock\t\tItem Restock Limit");
+            
+        File itemlist = new File("Item.txt");
+        
+        try(Scanner itemscanner = new Scanner (itemlist);){
+            
+            
+            
+            while (itemscanner.hasNextLine())
+            {
+                ItemID = itemscanner.next();
+                ItemName=itemscanner.next();
+                ItemPrice=itemscanner.nextDouble();
+                ItemStock=itemscanner.nextInt();
+                ItemLim=itemscanner.nextInt();
+                if (ItemLim==0)
+                {
+                    
+                }
+                else
+                {
+                    if (ItemStock<ItemLim){
+                        if (ItemName.length()<=7)
+                        {
+                            String ItemLine= ItemID+"\t\t"+ItemName+"\t\t\t"+ItemPrice+"\t\t\t"+ItemStock+"\t\t\t"+ItemLim;
+                            System.out.println(ItemLine);
+                        }
+                        else 
+                        {
+                            String ItemLine= ItemID+"\t\t"+ItemName+"\t\t"+ItemPrice+"\t\t\t"+ItemStock+"\t\t\t"+ItemLim;
+                            System.out.println(ItemLine);
+                        }
+                    }
+                }
+                
+            }
+            
+        }
+        catch(IOException Ex)
+        {
+            System.out.println("Error with file handling");
+        }
     }
 }
