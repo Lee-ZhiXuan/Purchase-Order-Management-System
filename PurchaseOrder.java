@@ -11,20 +11,21 @@ class PurchaseOrder implements SalesObject{
     private String itemID;
     private String reqID;
     private String supplierID;
+    private String userID;
+    private PurchaseReq purchaseReq; //Aggregation with purchase requisition
 
-    final static String filePath = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Item\\Order.Txt\\";
-    final static String filePath2 = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Item\\Order_Buffer.Txt\\";
-    final static String filePath3 = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Item\\Requisition.Txt\\";
+    final static String filePath = "Order.Txt";
+    final static String filePath2 = "Order_Buffer.Txt";
+    final static String filePath3 = "Requisition.Txt";
     
     // Constructor
-    public PurchaseOrder(String OrderID, String ItemID, String ReqID, int OrderQuantity, int OrderStatus, String OrderDate, String SupplierID) {
+    public PurchaseOrder(String OrderID, int OrderStatus, String OrderDate, String SupplierID, String UserID, PurchaseReq PurchaseReq) {
         this.orderID = OrderID;
-        this.orderQuantity = OrderQuantity;
         this.orderStatus = OrderStatus;
         this.orderDate = OrderDate;
-        this.itemID = ItemID;
-        this.reqID = ReqID;
         this.supplierID = SupplierID;
+        this.userID = UserID;
+        this.purchaseReq = PurchaseReq;
 
     }
 
@@ -34,42 +35,36 @@ class PurchaseOrder implements SalesObject{
     public String getOrderID() {
         return orderID;
     }
-    public int getOrderQuantity() {
-        return orderQuantity;
-    }
     public int getOrderStatus() {
         return orderStatus;
     }
     public String getOrderDate() {
         return orderDate;
     }
-    public String getItemID() {
-        return itemID;
-    }
-    public String getReqID() {
-        return reqID;
-    }
     public String getSupplierID() {
         return supplierID;
+    }
+    public String getUserID() {
+        return userID;
     }
 
     Scanner Sc = new Scanner(System.in);
 
 
-    // View Purchase Order Method
+    // View purchase order method
     @Override
     public void view() {
         Scanner sc = new Scanner(System.in);
-        displayOrder("View Order List");
+        displayOrder();
         System.out.print("\nPress Enter to return...");
         sc.nextLine();
         System.out.println();
     }
 
 
-    // Create Purchase Order Method
+    @Override
+    // Create purchase order method
     public void create(String userID) {
-        // String orderID; int orderQuantity; String orderDate; String itemID = null; String reqID = null; String supplierID;
         int selection;
 
         do {
@@ -92,10 +87,8 @@ class PurchaseOrder implements SalesObject{
 
             switch (selection) {
                 case 1 -> {
-                    int reqQuantity = 0;
-                    int reqStatus;
-                    String reqDate = null;
-                    int count = PurchaseReq.selectiveDisplayReq("Approved Purchase Requisitions", 2, "Approved");
+                    int reqQuantity = 0; int reqStatus = 0; String reqDate = null;
+                    int count = PurchaseReq.selectiveDisplayReq(2, "Approved");
                     int selection2;
                     do {
                         System.out.println("Select the purchase requisition you wish to handle.");
@@ -131,10 +124,14 @@ class PurchaseOrder implements SalesObject{
                                         if (reqStatus == 2) {
                                             currentRow++;
                                             if (currentRow == selection2) {
-                                                System.out.println("=============================================================================");
-                                                System.out.println("#\tReq ID\t\tItem ID\t\tQuantity\tDate\t\t\t\tStatus\n");
-                                                System.out.println(selection2 + "\t" + reqID + "\t\t" + itemID + "\t\t" + reqQuantity + "\t\t\t" + reqDate + "\t\t\tApproved");
-                                                System.out.println("=============================================================================");
+                                                String string = "=".repeat(80);
+                                                System.out.format("""
+                                                            %s
+                                                            %-5s %-10s %-10s %-10s %-15s %-12s %-10s
+                                                            %s
+                                                            """, string,"No.", "Req ID", "Item ID", "Quantity", "Date", "Status", "Raised By", string);
+                                                            System.out.format("\n%-5d %-10s %-10s %-10s %-15s %-12s %-10s", selection2, reqID, itemID, reqQuantity, reqDate, "Approved", userID);
+                                                System.out.println("\n" + string);
                                                 break;
                                             }
                                         }
@@ -147,24 +144,25 @@ class PurchaseOrder implements SalesObject{
                             
                             System.out.print("Enter Order ID: ");
                             orderID = Sc.nextLine();
+                            if (PurchaseReq.checker(filePath, orderID)) {
+                                System.out.println("Order ID already exists.");
+                                System.out.print("\nPress Enter to return...");
+                                Sc.nextLine();
+                                break;
+                            }
                             System.out.print("Enter Order Date (DD-MM-YYYY): ");
                             orderDate = Sc.nextLine();
                             System.out.print("Enter Supplier ID: ");
                             supplierID = Sc.nextLine();
                             
                             orderQuantity = reqQuantity;
-                            
-                            PurchaseOrder order = new PurchaseOrder(orderID, itemID, reqID, orderQuantity, 1, orderDate, supplierID);
+
+                            PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, reqStatus, reqDate, userID);
+                            PurchaseOrder order = new PurchaseOrder(orderID, 1, orderDate, supplierID, userID, req);
                             PurchaseReq.EditFileLine(selection2, reqID, itemID, reqQuantity, 4, reqDate, userID);
                             PurchaseReq.ReplaceReq();
-                            
-                            try {
-                                try (FileWriter tfw = new FileWriter(filePath, true)) {
-                                    tfw.write("\n" + order.getOrderID() + " " + order.getItemID() + " " + order.getReqID() + " " + order.getOrderQuantity() + " " + order.getOrderStatus() + " " + order.getOrderDate() + " " + userID + " " + order.getSupplierID());
-                                }
-                            } catch (IOException e) {
-                                System.out.println("\nAn error occurred.");
-                            }
+
+                            order.create();
                             
                             System.out.println("\nPurchase order successfully created.");
                             System.out.print("\nPress Enter to continue...");
@@ -179,14 +177,20 @@ class PurchaseOrder implements SalesObject{
             }
         } while (selection != 0);
     }
-    
     @Override
-    public void create(){}
+    public void create() {
+        try (FileWriter tfw = new FileWriter(filePath, true)) {
+            tfw.write("\n" + getOrderID() + " " + purchaseReq.getItemID() + " " + purchaseReq.getReqID() + " " + purchaseReq.getReqQuantity() + " " + getOrderStatus() + " " + getOrderDate() + " " + getUserID() + " " + getSupplierID());
+        } catch (IOException e) {
+            System.out.println("\nAn error occurred.");
+        }
+    }
 
-    // Edit Purchase Order Method
+
+    // Edit purchase order method
+    @Override
     public void edit(String userID) {
-        int count = displayOrder("Edit Purchase Orders");
-        // int orderQuantity = 0; String itemID = null; String reqID = null;
+        int count = displayOrder();
         int selection;
 
         do {
@@ -250,12 +254,9 @@ class PurchaseOrder implements SalesObject{
 
         System.out.println();
     }
-    
     @Override
     public void edit() {}
-
-
-    // Edit method
+    // Edit line in text file method
     static void EditFileLine(int selection, String orderID, String itemID, String reqID, int orderQuantity, int orderStatus, String orderDate, String userID, String supplierID) {
 
         try (BufferedReader rd = new BufferedReader(new FileReader(filePath));
@@ -281,10 +282,10 @@ class PurchaseOrder implements SalesObject{
     }
 
 
-    // Delete Purchase Order Method
+    // Delete purchase order method
     @Override
     public void delete() {
-        int count = displayOrder("Remove Purchase Order");
+        int count = displayOrder();
         int selection;
 
         do {
@@ -325,9 +326,7 @@ class PurchaseOrder implements SalesObject{
 
         System.out.println();
     }
-
-
-    // Delete Method
+    // Delete line in text file method
     static void DeleteFileLine(int selection) {
 
         try (BufferedReader rd = new BufferedReader(new FileReader(filePath));
@@ -351,7 +350,7 @@ class PurchaseOrder implements SalesObject{
     }
 
 
-    // Replace Actual with Carry
+    // Replace actual text file with buffer text file
     static void ReplaceOrder() {
 
         //Delete old order file
@@ -363,11 +362,8 @@ class PurchaseOrder implements SalesObject{
         }
 
         //Rename carry order
-        String oldFilePath = filePath2;
-        String newFilePath = filePath;
-
-        File oldFile = new File(oldFilePath);
-        File newFile = new File(newFilePath);
+        File oldFile = new File(filePath2);
+        File newFile = new File(filePath);
 
         boolean renamed = oldFile.renameTo(newFile);
 
@@ -378,10 +374,11 @@ class PurchaseOrder implements SalesObject{
         }
     }
 
-    // Purchase Order Approval
+
+    // Purchase order approval method
     public void OrderHandle() {
         String orderID = null; int orderQuantity = 0; int orderStatus; String orderDate = null; String itemID = null; String userID = null; String reqID = null; String supplierID = null;
-        int count = selectiveDisplayOrder("Handle Purchase Order", 1, "Pending-");
+        int count = selectiveDisplayOrder();
         int selection; int selection2 = 0;
 
         do {
@@ -421,10 +418,14 @@ class PurchaseOrder implements SalesObject{
                             if (orderStatus == 1) {
                                 currentRow++;
                                 if (currentRow == selection) {
-                                    System.out.println("=====================================================================================================================");
-                                    System.out.println("#\tOrder ID\tItem ID\t\tRequisition ID\t\tQuantity\t\tDate\t\t\tStatus\t\tSupplier ID\t\tRaised by\n");
-                                    System.out.println(selection + "\t" + orderID + "\t\t" + itemID + "\t\t" + reqID + "\t\t\t\t" + orderQuantity + "\t\t\t\t" + orderDate + "\t\tPending\t\t" + supplierID + "\t\t" + userID);
-                                    System.out.println("=====================================================================================================================");
+                                    String string = "=".repeat(104);
+                                    System.out.format("""
+                                   %s
+                                   %-5s %-10s %-10s %-15s %-10s %-15s %-12s %-10s %-10s
+                                   %s
+                                   """, string,"No.","Order ID", "Item ID", "Requisition ID", "Quantity", "Date", "Status","Supplier", "Raised By", string);
+                                    System.out.format("\n%-5s %-10s %-10s %-15s %-10s %-15s %-12s %-10s %-10s", selection, orderID, itemID, reqID, orderQuantity, orderDate,"Pending-",supplierID, userID);
+                                    System.out.println("\n" + string);
                                     break;
                                 }
                             }
@@ -459,8 +460,8 @@ class PurchaseOrder implements SalesObject{
     }
 
 
-    // Display Order List Method
-    static int displayOrder(String header) {
+    // Display order list method
+    static int displayOrder() {
         int count = 1;
         try {
             String orderID; int orderQuantity; int orderStatus; String orderDate; String orderStatF = null; String itemID; String userID; String reqID; String supplierID;
@@ -501,9 +502,8 @@ class PurchaseOrder implements SalesObject{
         }
         return count;
     }
-
-    // Selective Display Order List Method
-    static int selectiveDisplayOrder(String header, int selection, String orderStatF) {
+    // Selective display order list method
+    static int selectiveDisplayOrder() {
         int count = 1;
         try {
             String orderID; int orderQuantity; int orderStatus; String orderDate; String itemID; String userID; String reqID; String supplierID;
@@ -527,8 +527,8 @@ class PurchaseOrder implements SalesObject{
                 orderDate = fsc.next();
                 userID = fsc.next();
                 supplierID = fsc.next();
-                if (orderStatus == selection) {
-                    System.out.format("\n%-5s %-10s %-10s %-15s %-10s %-15s %-12s %-10s %-10s", count, orderID, itemID, reqID, orderQuantity, orderDate,orderStatF,supplierID, userID);
+                if (orderStatus == 1) {
+                    System.out.format("\n%-5s %-10s %-10s %-15s %-10s %-15s %-12s %-10s %-10s", count, orderID, itemID, reqID, orderQuantity, orderDate,"Pending-",supplierID, userID);
                     count++;
                 }
             }
@@ -539,9 +539,7 @@ class PurchaseOrder implements SalesObject{
         }
         return count;
     }
-
-
-    // Selected Display Order Method
+    // Selected display order list method
     static void selectedDisplayOrder(int selection) {
         String orderID; int orderQuantity; int orderStatus; String orderDate; String orderStatF = null; String itemID; String reqID; String userID; String supplierID;
         System.out.println("\nSelected Purchase Order:");
