@@ -12,8 +12,8 @@ public class Item implements SalesObject{
     private int ItemLim;
     
     Scanner Sc = new Scanner(System.in);
-    String filePath = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Item\\Item.txt\\";
-    String filePath2 = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Buffer.txt\\";
+    String filePath = "Item.txt";
+    String filePath2 = "Item_Buffer.txt";
     
     public Item(){}
     
@@ -66,26 +66,29 @@ public class Item implements SalesObject{
             System.out.println();
             System.out.println("New Item Entry:\n");
             
-            ItemID= newID();
-            System.out.println("Item ID: "+ ItemID);
+            String itemID= newID();
+            System.out.println("Item ID: "+ itemID);
             
             
             System.out.println("Item name:\t(Input 0 to back)");
-            ItemName= Sc.nextLine();
+            String itemName= Sc.nextLine();
             
             
             
-            while (ItemName.equals("0")==false)
-            {
-                if(checkItem(ItemName)==false)
+            while (!itemName.equals("0")){
+                if(checkItem(itemName)==true)
                 {
                     System.out.println("Item exists, pls reinput");
                     System.out.println("Item name:\t(Input 0 to back)");
-                    ItemName= Sc.nextLine();
+                    
                 }
+                else{
+                    break;
+                }
+                itemName= Sc.nextLine();
             }
-            
-            if(ItemName.equals("0"))
+      
+            if(itemName.equals("0"))
             {
                 break;
             }
@@ -100,7 +103,7 @@ public class Item implements SalesObject{
             ItemLim= Sc.nextInt();
             Sc.nextLine();
             
-            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+            String Line=itemID+" "+itemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
         
             WriteLine(filePath,Line);       
         }
@@ -142,13 +145,6 @@ public class Item implements SalesObject{
                             System.out.println("Item name:");
                             ItemName= Sc.nextLine();
                             
-                            while (checkItem(ItemName)==false)
-                            {
-                                System.out.println("Item name exists, pls reinput");
-                                System.out.println("Item name:");
-                                ItemName= Sc.nextLine();
-                            }
-                            
                             System.out.println("Item price:");
                             ItemPrice= Sc.nextDouble();
                             System.out.println("Item stock:");
@@ -162,6 +158,7 @@ public class Item implements SalesObject{
                         } 
                         
                         WriteLine(filePath2,Line);
+                          
                     }
                     
                     
@@ -182,8 +179,9 @@ public class Item implements SalesObject{
                 }
                 
             }
+            Rename(); 
         }
-        Rename();      
+           
     }
     
     @Override
@@ -430,7 +428,6 @@ public class Item implements SalesObject{
     
     private boolean checkItem(String item_name)
     {
-        boolean check=true;
         File itemlist = new File("Item.txt");
           
         try(Scanner itemscanner = new Scanner (itemlist);){
@@ -443,15 +440,15 @@ public class Item implements SalesObject{
                 ItemStock=itemscanner.nextInt();
                 ItemLim=itemscanner.nextInt();
                 
-                if (item_name.equals(ItemName))
+                if (item_name.equals(this.ItemName))
                 {
-                    check=false;
+                    return true;
                 }
             }
         }
         catch(IOException Ex){
             System.out.println("Error reading file.");
         }
-        return check;
+        return false;
     }
 }

@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.*;
 
 public class Supplier{
+    
+    String filePath = "Supplier Credentials.Txt";
+    
     public Supplier(){}
     
     public void searchSupplier(String itemID){
@@ -23,7 +26,8 @@ public class Supplier{
                                   Name      : %s
                                   Item Sold : %s
                                   State     : %s
-                                  """, supplier[0], supplier[1], supplier[3], supplier[4]);
+                                  %s
+                                  """, supplier[0], supplier[1], supplier[3], supplier[4], string);
             }
         }
             
@@ -32,14 +36,18 @@ public class Supplier{
         }    
     }
     
-    public boolean checkSupplier(String itemID){
+    public boolean checkSupplier(String supplierID, String itemID){
         List<String[]> supplierArray = read_file();
+        
         for(String[] supplier: supplierArray){
-            if (itemID.equals(supplier[2])){
-                return true;
+            if (supplierID.equals(supplier[0])){
+                if (itemID.equals(supplier[2])){
+                    return true;
+                }
             }
         }
-        return false;        
+
+        return false;
     }
     
     public void addSupplier(){
@@ -48,9 +56,9 @@ public class Supplier{
         
         System.out.println();
         System.out.print("""
-                           ============
-                           New Supplier
-                           ============
+                           ================
+                             New Supplier
+                           ================
                            """);
         System.out.print("Supplier Name : ");
         supplierInfo[1] = sc.nextLine();
@@ -65,12 +73,11 @@ public class Supplier{
         int newValue = Integer.parseInt(lastID) + 1; String newID = String.format("%02d", newValue);
         
         supplierInfo[0] = "S" + newID;
-
-        String fileName = "Supplier Info.txt";
+        
         try {
             try ( 
                 // Create a FileWriter in append mode
-                FileWriter fileWriter = new FileWriter(fileName, true); 
+                FileWriter fileWriter = new FileWriter(filePath, true); 
                 // Create a BufferedWriter for efficient writing
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
                 // Write the userInfo array to the file
@@ -89,7 +96,6 @@ public class Supplier{
     }
     
     public void editSupplier(){
-
         List<String[]>supplierArray = read_file();
         Scanner sc = new Scanner(System.in);
         
@@ -152,11 +158,10 @@ public class Supplier{
                     }
                     }
 
-                    String fileName = "Supplier Info.txt";
                     try {
                         try ( 
                             // Create a FileWriter in append mode
-                            FileWriter fileWriter = new FileWriter(fileName); 
+                            FileWriter fileWriter = new FileWriter(filePath); 
                             // Create a BufferedWriter for efficient writing
                             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
                                 // Write the userInfo array to the file
@@ -219,11 +224,10 @@ public class Supplier{
             return;
         }
 
-        String fileName = "Supplier Info.txt";
         try {
             // Create a BufferedWriter for efficient writing
             try ( 
-                FileWriter fileWriter = new FileWriter(fileName); 
+                FileWriter fileWriter = new FileWriter(filePath); 
                 // Create a BufferedWriter for efficient writing
                 var bufferedWriter = new BufferedWriter(fileWriter)) {
                 // Write the userInfo array to the file
@@ -264,9 +268,8 @@ public class Supplier{
     
     private List<String[]> read_file(){
         List<String[]> supplierArray = new ArrayList<>();
-        String fileName = "Supplier Info.txt";
         
-        try (BufferedReader buffer = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = buffer.readLine()) != null) {
                 String[] supplierCredentials = line.split("\\s+");

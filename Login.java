@@ -6,7 +6,7 @@ import java.io.*;
 public class Login {
     
     String userID, userPass;
-    String filePath = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Credentials\\User Credentials.txt\\";
+    String filePath = "User Credentials.txt";
     
     public Login(){}
     

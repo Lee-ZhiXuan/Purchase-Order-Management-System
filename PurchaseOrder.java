@@ -1,4 +1,4 @@
-package beta_version;
+package Java_OOP_Assignment;
 
 import java.util.*;
 import java.io.*;
@@ -14,9 +14,9 @@ class PurchaseOrder implements SalesObject{
     private String userID;
     private PurchaseReq purchaseReq; //Aggregation with purchase requisition
 
-    final static String filePath = "Order.Txt";
-    final static String filePath2 = "Order_Buffer.Txt";
-    final static String filePath3 = "Requisition.Txt";
+    static String filePath = "Order.Txt";
+    static String filePath2 = "Order_Buffer.Txt";
+    static String filePath3 = "Requisition.Txt";
     
     // Constructor
     public PurchaseOrder(String OrderID, int OrderStatus, String OrderDate, String SupplierID, String UserID, PurchaseReq PurchaseReq) {
@@ -61,8 +61,7 @@ class PurchaseOrder implements SalesObject{
         System.out.println();
     }
 
-
-    @Override
+    
     // Create purchase order method
     public void create(String userID) {
         int selection;
@@ -89,7 +88,7 @@ class PurchaseOrder implements SalesObject{
                 case 1 -> {
                     int reqQuantity = 0; int reqStatus = 0; String reqDate = null;
                     int count = PurchaseReq.selectiveDisplayReq(2, "Approved");
-                    int selection2;
+                    int selection2; int selection3 = 0;
                     do {
                         System.out.println("Select the purchase requisition you wish to handle.");
                         System.out.println("Back: 0");
@@ -121,6 +120,7 @@ class PurchaseOrder implements SalesObject{
                                         reqStatus = Integer.parseInt(data[3]);
                                         reqDate = data[4];
                                         userID = data[5];
+                                        selection3++;
                                         if (reqStatus == 2) {
                                             currentRow++;
                                             if (currentRow == selection2) {
@@ -148,7 +148,7 @@ class PurchaseOrder implements SalesObject{
                                 System.out.println("Order ID already exists.");
                                 System.out.print("\nPress Enter to return...");
                                 Sc.nextLine();
-                                break;
+                                return;
                             }
                             System.out.print("Enter Order Date (DD-MM-YYYY): ");
                             orderDate = Sc.nextLine();
@@ -156,18 +156,19 @@ class PurchaseOrder implements SalesObject{
                             supplier.searchSupplier(itemID);
                             System.out.print("Enter Supplier ID: ");
                             supplierID = Sc.nextLine();
-                            if (!supplier.checkSupplier(itemID)) {
+                            
+                            if (!supplier.checkSupplier(supplierID, itemID)) {
                                 System.out.println("Invalid Supplier.");
                                 System.out.print("\nPress Enter to return...");
                                 Sc.nextLine();
-                                break;
+                                return;
                             }
                             
                             orderQuantity = reqQuantity;
 
                             PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, reqStatus, reqDate, userID);
                             PurchaseOrder order = new PurchaseOrder(orderID, 1, orderDate, supplierID, userID, req);
-                            PurchaseReq.EditFileLine(selection2, reqID, itemID, reqQuantity, 4, reqDate, userID);
+                            PurchaseReq.EditFileLine(selection3, reqID, itemID, reqQuantity, 4, reqDate, userID);
                             PurchaseReq.ReplaceReq();
 
                             order.create();
@@ -185,6 +186,8 @@ class PurchaseOrder implements SalesObject{
             }
         } while (selection != 0);
     }
+    
+    
     @Override
     public void create() {
         try (FileWriter tfw = new FileWriter(filePath, true)) {
@@ -196,7 +199,6 @@ class PurchaseOrder implements SalesObject{
 
 
     // Edit purchase order method
-    @Override
     public void edit(String userID) {
         int count = displayOrder();
         int selection;
@@ -292,7 +294,7 @@ class PurchaseOrder implements SalesObject{
 
     // Delete purchase order method
     @Override
-    public void delete() {
+        public void delete() {
         int count = displayOrder();
         int selection;
 
@@ -320,6 +322,50 @@ class PurchaseOrder implements SalesObject{
                 System.out.print("\nConfirmation: ");
                 String confirmation = Sc.nextLine();
                 if (Objects.equals(confirmation, "YES")) {
+
+                    try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                        String line;
+                        int currentRow = 0;
+
+                        while ((line = br.readLine()) != null) {
+                            String[] data = line.split(" ");
+                            currentRow++;
+                            if (data.length >= 4) {
+                                reqID = data[2];
+                                if (currentRow == selection) {
+                                    System.out.println(reqID);
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                    }
+
+                    try (BufferedReader br = new BufferedReader(new FileReader(filePath3))) {
+                        String line; int currentRow = 0;
+
+                        while ((line = br.readLine()) != null) {
+                            String[] data = line.split(" ");
+                            if (data.length >= 4) {
+                                String reqID2 = data[0];
+                                String itemID2 = data[1];
+                                int reqQuantity2 = Integer.parseInt(data[2]);
+                                String reqDate2 = data[4];
+                                String userID2 = data[5];
+                                currentRow++;
+                                if (Objects.equals(reqID2, reqID)) {
+                                    PurchaseReq.EditFileLine(currentRow, reqID2, itemID2, reqQuantity2, 2, reqDate2, userID2);
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                    }
+
+                    PurchaseReq.ReplaceReq();
+
                     DeleteFileLine(selection);
                     ReplaceOrder();
                 } else {
@@ -334,6 +380,7 @@ class PurchaseOrder implements SalesObject{
 
         System.out.println();
     }
+        
     // Delete line in text file method
     static void DeleteFileLine(int selection) {
 

@@ -11,9 +11,10 @@ public class DailySales extends Item{
     private int sales_amount;
     private String FileName;
     
-    final static String DIRNAME="C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Daily_Sales\\";
-    final static String DIR="C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Daily_Sales";
-
+    
+    final static String DIR="C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Daily Sales Text File";
+    final static String DIRNAME=DIR+"\\";
+    
     public DailySales(){}
     
     @Override

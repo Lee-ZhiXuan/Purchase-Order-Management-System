@@ -1,4 +1,4 @@
-package beta_version;
+package Java_OOP_Assignment;
 
 import java.util.*;
 import java.io.*;
@@ -11,8 +11,8 @@ class PurchaseReq implements SalesObject{
     private String itemID;
     private String userID;
 
-    final static String filePath = "Requisition.Txt";
-    final static String filePath2 = "Requisition_Buffer.Txt";
+    static String filePath = "Requisition.Txt";
+    static String filePath2 = "Requisition_Buffer.Txt";
     
     // Constructor
     public PurchaseReq(String ReqID, String ItemID, int ReqQuantity, int ReqStatus, String ReqDate, String UserID) {
@@ -61,7 +61,6 @@ class PurchaseReq implements SalesObject{
 
 
     // Create purchase requisition method
-    @Override
     public void create(String userID) {
         int selection;
 
@@ -127,7 +126,6 @@ class PurchaseReq implements SalesObject{
 
 
     // Edit Purchase Requisition Method
-    @Override
     public void edit(String userID) {
         int count = displayReq();
         int selection;
