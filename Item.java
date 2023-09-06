@@ -66,14 +66,31 @@ public class Item implements SalesObject{
             System.out.println();
             System.out.println("New Item Entry:\n");
             
-            System.out.println("Item ID:\t(Input 0 to back)");
-            ItemID= Sc.nextLine();
-            if (ItemID.equals("0"))
+            System.out.println("Item ID:");
+            ItemID= newID();
+            
+            System.out.println("Item name:\t(Input 0 to back)");
+            ItemName= Sc.nextLine();
+            
+            
+            
+            while (ItemName.equals("0")==false)
+            {
+                if(checkItem(ItemName)==false)
+                {
+                    System.out.println("Item exists, pls reinput");
+                    System.out.println("Item name:\t(Input 0 to back)");
+                    ItemName= Sc.nextLine();
+                }
+            }
+            
+            if(ItemName.equals("0"))
             {
                 break;
             }
-            System.out.println("Item name:");
-            ItemName= Sc.nextLine();
+            
+            
+            
             System.out.println("Item price:");
             ItemPrice= Sc.nextDouble();
             System.out.println("Item stock:");
@@ -123,6 +140,15 @@ public class Item implements SalesObject{
                             System.out.println("Input edited info:");
                             System.out.println("Item name:");
                             ItemName= Sc.nextLine();
+                            
+                            while (checkItem(ItemName)==false)
+                            {
+                                
+                                System.out.println("Item name exists, pls reinput");
+                                System.out.println("Item name:");
+                                ItemName= Sc.nextLine();
+                            }
+                            
                             System.out.println("Item price:");
                             ItemPrice= Sc.nextDouble();
                             System.out.println("Item stock:");
@@ -137,13 +163,8 @@ public class Item implements SalesObject{
                         
                         WriteLine(filePath2,Line);
                     }
-                }
-                catch(IOException Ex)
-                {
-                    System.out.println("Error with file handling.");
-                }
-                finally
-                {
+                    
+                    
                     if(tracker!=0)
                     {
                         System.out.println("Item ID edited");
@@ -151,8 +172,15 @@ public class Item implements SalesObject{
                     else
                     {
                         System.out.println("Item ID not found");
-                    }     
+                    }
+                    
+                    tracker=0;
                 }
+                catch(IOException Ex)
+                {
+                    System.out.println("Error with file handling.");
+                }
+                
             }
         }
         Rename();      
@@ -373,5 +401,57 @@ public class Item implements SalesObject{
         {
             System.out.println("Error with file handling");
         }
+    }
+    
+    private String newID(){
+        int ctr=1;
+        String ID="IT";
+        File itemlist = new File("Item.txt");
+          
+        try(Scanner itemscanner = new Scanner (itemlist);){
+            
+            while (itemscanner.hasNextLine())
+            {
+                ItemID = itemscanner.next();
+                ItemName=itemscanner.next();
+                ItemPrice=itemscanner.nextDouble();
+                ItemStock=itemscanner.nextInt();
+                ItemLim=itemscanner.nextInt();
+                
+                ctr++;
+            }
+        }
+        catch(IOException Ex){
+            System.out.println("Error reading file.");
+        }
+        ID=ID+ctr;
+        return ID;
+    }
+    
+    private boolean checkItem(String item_name)
+    {
+        boolean check=true;
+        File itemlist = new File("Item.txt");
+          
+        try(Scanner itemscanner = new Scanner (itemlist);){
+            
+            while (itemscanner.hasNextLine())
+            {
+                ItemID = itemscanner.next();
+                ItemName=itemscanner.next();
+                ItemPrice=itemscanner.nextDouble();
+                ItemStock=itemscanner.nextInt();
+                ItemLim=itemscanner.nextInt();
+                
+                if (item_name.equals(ItemName))
+                {
+                    check=false;
+                }
+            }
+        }
+        catch(IOException Ex){
+            System.out.println("Error reading file.");
+        }
+        return check;
     }
 }
