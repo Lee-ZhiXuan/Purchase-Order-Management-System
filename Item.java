@@ -66,8 +66,9 @@ public class Item implements SalesObject{
             System.out.println();
             System.out.println("New Item Entry:\n");
             
-            System.out.println("Item ID:");
             ItemID= newID();
+            System.out.println("Item ID: "+ ItemID);
+            
             
             System.out.println("Item name:\t(Input 0 to back)");
             ItemName= Sc.nextLine();
@@ -143,7 +144,6 @@ public class Item implements SalesObject{
                             
                             while (checkItem(ItemName)==false)
                             {
-                                
                                 System.out.println("Item name exists, pls reinput");
                                 System.out.println("Item name:");
                                 ItemName= Sc.nextLine();
@@ -155,7 +155,7 @@ public class Item implements SalesObject{
                             ItemStock= Sc.nextInt();
                             System.out.println("Item restock amount:");
                             ItemLim= Sc.nextInt();
-                        
+                            
                             Sc.nextLine();
                             
                             Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim; 
@@ -223,23 +223,23 @@ public class Item implements SalesObject{
                             String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
                             WriteLine(filePath2,Line);
                         }
-                    }                   
+                    } 
+                    
                 }
                 catch(IOException Ex)
                 {
                     System.out.println("Error with file handling.");
                 }
-                finally{
-                    Rename();
-                    if (tracker==0)
-                    {
-                        System.out.println("Item ID not found.");
-                    }
-                    else
-                    {
-                        System.out.println("Item listed as deleted.");
-                    }
-                }
+            }
+            
+            Rename();
+            if (tracker==0)
+            {
+                System.out.println("Item ID not found.");
+            }
+            else
+            {
+                System.out.println("Item listed as deleted.");
             }
         }   
     }
