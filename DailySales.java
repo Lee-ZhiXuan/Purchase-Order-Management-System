@@ -76,7 +76,12 @@ public class DailySales extends Item{
                 System.out.println("Input sales amount: ");
                 sales_amount=Sc.nextInt();
                 String Line= ItemID+" "+getItemName(ItemID)+" "+sales_amount;
-                WriteLine(filename,Line);
+                if (getItemName(ItemID).equals("placeholder"))
+                {
+                    
+                }
+                else{WriteLine(filename,Line);}
+                
                 System.out.println(StockUpdate(ItemID,sales_amount,false));
             }
         }        
@@ -101,7 +106,7 @@ public class DailySales extends Item{
             {
                 DailySalesViewer(FileName);
                 File orifile = new File(FilePath);
-                System.out.println("1. Edit sales amount\n2. Add new item sales\n(Input any other integer value to exit.)");
+                System.out.println("1. Edit sales amount\n2. Add new item sales\n(3. Delete an entry\nInput any other integer value to exit.)");
                 
                 int act= Sc.nextInt();
                 switch (act)
@@ -143,6 +148,30 @@ public class DailySales extends Item{
                         String Line= ItemID+" "+getItemName(ItemID)+" "+sales_amount;
                         WriteLine(FilePath,Line);
                         System.out.println(StockUpdate(ItemID,sales_amount,false));
+                    }
+                    case 3 ->{
+                        System.out.println("Delete Item ID sales entry: ");
+                        String Item_ID=Sc.next();
+                        try(Scanner SalesScanner = new Scanner (orifile)){
+                            while (SalesScanner.hasNextLine())
+                            {
+                                ItemID=SalesScanner.next();
+                                ItemName=SalesScanner.next();
+                                sales_amount=SalesScanner.nextInt();
+                                
+                                String Line=ItemID+" "+ItemName+" "+sales_amount;
+                                if (Item_ID.equals(ItemID)){}
+                                else{WriteLine(BufferFilePath,Line);}
+                                
+                            }
+                        }
+                        catch(IOException Ex)
+                        {
+                            System.out.println("error with scanner");
+                        }
+                        
+                        Rename(FilePath);
+                        System.out.println(StockUpdate(ItemID,sales_amount,true));
                     }
                     default ->{}      
                 }
