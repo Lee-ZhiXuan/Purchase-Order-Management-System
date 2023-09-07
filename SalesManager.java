@@ -7,6 +7,7 @@ public class SalesManager extends User{
     PurchaseReq pr = new PurchaseReq(); Supplier sp = new Supplier(); Item i = new Item(); DailySales ds = new DailySales();
     Scanner sc = new Scanner(System.in);
     
+    public SalesManager(){};
     public SalesManager(String userID, String userName, String password, String position) {
         super(userID, userName, password, position);
     }
@@ -17,16 +18,16 @@ public class SalesManager extends User{
         
         do{           
             System.out.println("""
-                               ===================
-                                     SM Menu
-                               ===================
+                               ======================
+                                 Sales Manager Menu
+                               ======================
                                1. Item Menu
                                2. Daily Sales Menu
                                3. View Supplier
                                4. Requisition Menu
 
                                0. Return
-                               ===================
+                               =====================
                                """);
             System.out.print("Choice: ");
             

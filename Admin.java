@@ -5,7 +5,9 @@ import java.util.*;
 
 public class Admin extends User{
     
-    String filePath = "C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Txt_Files\\Credentials\\User Credentials.Txt\\";
+    PurchaseManager pm = new PurchaseManager(); SalesManager sm = new SalesManager();
+   
+    String filePath = "User Credentials.Txt";
     
     public Admin(String userID, String userName, String password, String position){
         super(userID,userName,password,position);
@@ -17,29 +19,26 @@ public class Admin extends User{
         do{
             Scanner sc = new Scanner(System.in); int choice;
             System.out.println("""
-                               ==============
-                                    Menu
-                               ==============
-                               1. Create user
-                               2. Edit user
-                               3. Delete user
-                               4. View user
-
+                               =========================
+                                       Admin Menu
+                               =========================
+                               1. User Management
+                               2. Sales Manager Menu
+                               3. Purchase Manager Menu
+                               
                                0. Exit
-                               ===============
+                               ========================
                                """);
             System.out.print("Choice: ");
 
             try{
                 choice = sc.nextInt();
                 switch (choice){
-                case 1 -> addUser();
-                case 2 -> editUser();
-                case 3 -> deleteUser();
-                case 4 -> viewUser();
+                case 1 -> userManagement();
+                case 2 -> sm.menu();
+                case 3 -> pm.menu();
                 case 0 ->{
                     exit = true;
-                    System.out.println("Logging out ...");
                 }
                 default -> System.out.println("Please enter a valid choice.");
                 }
@@ -49,6 +48,47 @@ public class Admin extends User{
                 sleep();
             }
         } while (exit != true);
+        
+        System.out.println("Logging out ...");
+    }
+    
+    public void userManagement(){
+        boolean exit = false;
+        do{
+            Scanner sc = new Scanner(System.in);
+            System.out.println("""
+                               ===================
+                                 User Management
+                               ===================
+                               1. Create User
+                               2. Edit User
+                               3. Delete User
+                               4. View User
+                               
+                               0. Return
+                               ===================
+                               """);
+            System.out.print("Choice: ");
+
+            try{
+                int choice = sc.nextInt();
+                switch (choice){
+                case 1 -> addUser();
+                case 2 -> editUser();
+                case 3 -> deleteUser();
+                case 4 -> viewUser();
+                case 0 ->{
+                    exit = true;
+                }
+                default -> System.out.println("Please enter a valid choice.");
+                }
+            } 
+            catch (InputMismatchException e){
+                System.out.println("Invalid input. Please enter an integer.");
+                sleep();
+            }
+        } while (exit != true);
+        
     }
     
     public void addUser(){

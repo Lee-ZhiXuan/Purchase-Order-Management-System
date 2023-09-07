@@ -12,7 +12,7 @@ class PurchaseOrder implements SalesObject{
     private String reqID;
     private String supplierID;
     private String userID;
-    private PurchaseReq purchaseReq; //Aggregation with purchase requisition
+    private PurchaseReq purchaseReq; //Composition with purchase requisition
 
     static String filePath = "Order.Txt";
     static String filePath2 = "Order_Buffer.Txt";

@@ -12,7 +12,7 @@ public class DailySales extends Item{
     private String FileName;
     
     
-    final static String DIR="C:\\Users\\Asus\\OneDrive - Asia Pacific University\\Documents\\NetBeansProjects\\Assignment\\Beta_Version\\Daily Sales Text File";
+    final static String DIR="Daily Sales Text File";
     final static String DIRNAME=DIR+"\\";
     
     public DailySales(){}
@@ -61,7 +61,12 @@ public class DailySales extends Item{
         System.out.println();
         Item It= new Item();
         It.view();
-        System.out.println("Create daily sales entry for today("+date+"): ");
+        System.out.println("Create/append daily sales entry for today("+date+"): ");
+        File f = new File(filename);
+        if (f.exists())
+        {
+            DailySalesViewer(date);
+        }
         while (true)
         {
             System.out.println("Select Item ID: \t(input 0 to exit)");
@@ -106,7 +111,7 @@ public class DailySales extends Item{
             {
                 DailySalesViewer(FileName);
                 File orifile = new File(FilePath);
-                System.out.println("1. Edit sales amount\n2. Add new item sales\n(3. Delete an entry\nInput any other integer value to exit.)");
+                System.out.println("1. Edit sales amount\n2. Add new item sales\n3. Delete an entry\nInput any other integer value to exit.)");
                 
                 int act= Sc.nextInt();
                 switch (act)
@@ -150,6 +155,7 @@ public class DailySales extends Item{
                         System.out.println(StockUpdate(ItemID,sales_amount,false));
                     }
                     case 3 ->{
+                        int tracker=0;
                         System.out.println("Delete Item ID sales entry: ");
                         String Item_ID=Sc.next();
                         try(Scanner SalesScanner = new Scanner (orifile)){
@@ -160,7 +166,10 @@ public class DailySales extends Item{
                                 sales_amount=SalesScanner.nextInt();
                                 
                                 String Line=ItemID+" "+ItemName+" "+sales_amount;
-                                if (Item_ID.equals(ItemID)){}
+                                if (Item_ID.equals(ItemID)){
+                                    tracker++;
+                                    System.out.println(StockUpdate(ItemID,sales_amount,true));
+                                }
                                 else{WriteLine(BufferFilePath,Line);}
                                 
                             }
@@ -171,7 +180,10 @@ public class DailySales extends Item{
                         }
                         
                         Rename(FilePath);
-                        System.out.println(StockUpdate(ItemID,sales_amount,true));
+                        if (tracker==0)
+                        {
+                            System.out.println("Item ID not found");
+                        }
                     }
                     default ->{}      
                 }
@@ -231,17 +243,23 @@ public class DailySales extends Item{
     
     private static void ListDir()
     {
-        System.out.println("Daily sales report dates:");
+        System.out.print("""
+                           ========================
+                           Daily sales report dates
+                           ========================
+                           """);
         File salesdir= new File(DIR);
         String[]s = salesdir.list();
         
+        int i = 1;
         for(String s1:s)
         {
             File f= new File(salesdir,s1);
             if(f.isFile())
             {
                 String[] str=s1.split(".t",2);
-                System.out.println(str[0]);
+                System.out.println(i + ". " + str[0]);
+                i++;
             }
         }
     }
@@ -268,8 +286,12 @@ public class DailySales extends Item{
     
     private void DailySalesViewer(String path)
     {
-        System.out.println("Daily sales entry: " +path);
-        System.out.println("=========================");
+        String s = "=".repeat(45);
+        System.out.format("""
+                         %s
+                         Daily sales entry: %s
+                         %s
+                         """,s, path, s);
         System.out.println("Item ID\t\tItem Name\t\tSales");
         
         File DailySalesList = new File(DIRNAME+path+".txt");
@@ -289,7 +311,9 @@ public class DailySales extends Item{
                 {
                     System.out.println(ItemID+"\t\t"+ItemName+"\t\t"+sales_amount);
                 }     
-            }    
+            } 
+            
+            System.out.println(s);
         }
         catch(IOException Ex)
         {

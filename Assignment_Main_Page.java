@@ -21,17 +21,17 @@ public class Assignment_Main_Page{
             
             switch (userPosition){
             case 1 -> {
-                System.out.println("\nWelcome Admin! \n");
+                System.out.println("\nWelcome " + userCredentials[1] + " !\n");
                 User admin = new Admin( userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
                 admin.menu();
             }
             case 2 -> {
-                System.out.println(" \nWelcome Sales Manager! \n");
+                System.out.println("\nWelcome " + userCredentials[1] + " !\n");
                 User salesManager = new SalesManager( userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
                 salesManager.menu();
             }
             case 3 -> {
-                System.out.println("\nWelcome Purchase Manager! \n");
+                System.out.println("\nWelcome " + userCredentials[1] + " !\n");
                 User purchaseManager = new PurchaseManager( userCredentials[0],userCredentials[1],userCredentials[2],userCredentials[3] );
                 purchaseManager.menu();
             }

@@ -20,10 +20,12 @@ public class Item implements SalesObject{
     @Override
     public void view()
     {
-        System.out.println("\n=========================");
-        System.out.println("\tItem List");
-        System.out.println("=========================");
-        System.out.println("Item ID\t\tItem Name\t\tItem Price\t\tItem Stock\t\tItem Restock Limit");
+        String s = "=".repeat(81);
+        System.out.format("""
+                          %s
+                          Item ID\t\tItem Name\tItem Price\tItem Stock\tItem Restock Limit
+                          %s
+                          """, s, s);
             
         File itemlist = new File(filePath);
          
@@ -41,16 +43,19 @@ public class Item implements SalesObject{
                 {
                     if (ItemName.length()<=7)
                     {
-                        String ItemLine= ItemID+"\t\t"+ItemName+"\t\t\t"+ItemPrice+"\t\t\t"+ItemStock+"\t\t\t"+ItemLim;
+                        String ItemLine= ItemID+"\t\t"+ItemName+"\t\t"+ItemPrice+"\t\t"+ItemStock+"\t\t"+ItemLim;    
                         System.out.println(ItemLine);
                     }
                     else 
                     {
-                        String ItemLine= ItemID+"\t\t"+ItemName+"\t\t"+ItemPrice+"\t\t\t"+ItemStock+"\t\t\t"+ItemLim;
+                        String ItemLine= ItemID+"\t\t"+ItemName+"\t\t"+ItemPrice+"\t\t"+ItemStock+"\t\t"+ItemLim;
                         System.out.println(ItemLine);
                     }
+                    
+
                 }   
-            }   
+            }
+            System.out.println(s);
         }
         catch(IOException Ex)
         {
@@ -402,28 +407,24 @@ public class Item implements SalesObject{
     }
     
     private String newID(){
-        int ctr=1;
-        String ID="IT";
-        File itemlist = new File("Item.txt");
-          
-        try(Scanner itemscanner = new Scanner (itemlist);){
-            
-            while (itemscanner.hasNextLine())
-            {
-                ItemID = itemscanner.next();
-                ItemName=itemscanner.next();
-                ItemPrice=itemscanner.nextDouble();
-                ItemStock=itemscanner.nextInt();
-                ItemLim=itemscanner.nextInt();
-                
-                ctr++;
+        List<String[]> itemArray = new ArrayList<>();
+        
+        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                String[] itemCredentials = line.split("\\s+");
+                itemArray.add(itemCredentials);
             }
+        } 
+        catch (IOException e) { 
+            System.err.println("Error reading file: " + e.getMessage());
         }
-        catch(IOException Ex){
-            System.out.println("Error reading file.");
-        }
-        ID=ID+ctr;
-        return ID;
+        
+        String[] lastItem = itemArray.get(itemArray.size() - 1); String lastID = lastItem[0].substring(4);
+        int newValue = Integer.parseInt(lastID) + 1; String newID = String.format("%02d", newValue);
+        
+        return "IT00" + newID;
+
     }
     
     private boolean checkItem(String item_name)

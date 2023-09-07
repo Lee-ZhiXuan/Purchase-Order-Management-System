@@ -8,6 +8,7 @@ public class PurchaseManager extends User{
     
     PurchaseReq pr = new PurchaseReq(); PurchaseOrder po = new PurchaseOrder(); Supplier sp = new Supplier(); Item i = new Item();
     
+    public PurchaseManager(){};
     public PurchaseManager(String userID, String userName, String password, String position) {
         super(userID, userName, password, position);
     }
@@ -18,16 +19,16 @@ public class PurchaseManager extends User{
         
         do{
         System.out.println("""
-                           =============================
-                                      PM Menu
-                           =============================
+                           ===============================
+                                Purchase Manager Menu
+                           ===============================
                            1. View Item
                            2. Supplier Menu
                            3. Purchase Requisition Menu
                            4. Purchase Order Menu
                            
                            0. Return
-                           =============================
+                           ===============================
                            """);
         System.out.print("Choice: ");
         
