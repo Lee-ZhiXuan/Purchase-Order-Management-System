@@ -12,7 +12,7 @@ class PurchaseOrder implements SalesObject{
     private String reqID;
     private String supplierID;
     private String userID;
-    private PurchaseReq purchaseReq; //Association/Dependency with purchase requisition
+    private PurchaseReq purchaseReq; //Unilateral dependency association with purchase requisition
 
     static String filePath = "Order.Txt";
     static String filePath2 = "Order_Buffer.Txt";
