@@ -1,4 +1,4 @@
-package SalesObjects;
+package Java_OOP_Assignment;
 
 import java.io.*;
 import java.util.*;
@@ -11,7 +11,7 @@ public class DailySales extends Item{
     private String FileName;
     
     
-    final static String DIR="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales";
+    final static String DIR="NetBeansProjects\\PurchaseManagementSystem\\DailySales";
     final static String DIRNAME=DIR+"\\";
     
     public DailySales(){}
