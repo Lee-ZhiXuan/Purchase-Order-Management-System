@@ -25,7 +25,7 @@ class PurchaseOrder implements SalesObject{
         this.orderDate = OrderDate;
         this.supplierID = SupplierID;
         this.userID = UserID;
-        this.purchaseReq = PurchaseReq;
+        this.purchaseReq = PurchaseReq; // Purchase requisition object used as part of the creation of a purchase order object
 
     }
 
@@ -95,7 +95,7 @@ class PurchaseOrder implements SalesObject{
                         try {
                             System.out.print("\nSelection: ");
                             selection2 = Sc.nextInt();
-                        } catch (InputMismatchException e) {
+                        } catch (InputMismatchException e) { // Error handling for invalid inputs
                             selection2 = 999;
                         }
                         Sc.nextLine();
@@ -108,7 +108,7 @@ class PurchaseOrder implements SalesObject{
                             
                             //Print header
                             System.out.println("\nSelected Purchase Requisition:");
-                            try (BufferedReader br = new BufferedReader(new FileReader(filePath3))) {
+                            try (BufferedReader br = new BufferedReader(new FileReader(filePath3))) { // Prints the list of approved purchase requisitions
                                 String line; int currentRow = 0;
                                 
                                 while ((line = br.readLine()) != null) {
@@ -144,7 +144,7 @@ class PurchaseOrder implements SalesObject{
                             
                             System.out.print("Enter Order ID: ");
                             orderID = Sc.nextLine();
-                            if (PurchaseReq.checker(filePath, orderID)) {
+                            if (PurchaseReq.checker(filePath, orderID)) { // Cross checking with existing order IDs to prevent duplication
                                 System.out.println("Order ID already exists.");
                                 System.out.print("\nPress Enter to return...");
                                 Sc.nextLine();
@@ -152,7 +152,7 @@ class PurchaseOrder implements SalesObject{
                             }
                             System.out.print("Enter Order Date (DD-MM-YYYY): ");
                             orderDate = Sc.nextLine();
-                            Supplier supplier = new Supplier();
+                            Supplier supplier = new Supplier(); // Creating new supplier object
                             supplier.searchSupplier(itemID);
                             System.out.print("Enter Supplier ID: ");
                             supplierID = Sc.nextLine();
@@ -166,8 +166,8 @@ class PurchaseOrder implements SalesObject{
                             
                             orderQuantity = reqQuantity;
 
-                            PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, reqStatus, reqDate, userID);
-                            PurchaseOrder order = new PurchaseOrder(orderID, 1, orderDate, supplierID, userID, req);
+                            PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, reqStatus, reqDate, userID); // Creating new purchase requisition object
+                            PurchaseOrder order = new PurchaseOrder(orderID, 1, orderDate, supplierID, userID, req); // Creating new purchase order object with purchase req
                             PurchaseReq.EditFileLine(selection3, reqID, itemID, reqQuantity, 4, reqDate, userID);
                             PurchaseReq.ReplaceReq();
 
@@ -190,7 +190,7 @@ class PurchaseOrder implements SalesObject{
     
     @Override
     public void create() {
-        try (FileWriter tfw = new FileWriter(filePath, true)) {
+        try (FileWriter tfw = new FileWriter(filePath, true)) { // retrieve data using getters and writes into text file
             tfw.write("\n" + getOrderID() + " " + purchaseReq.getItemID() + " " + purchaseReq.getReqID() + " " + purchaseReq.getReqQuantity() + " " + getOrderStatus() + " " + getOrderDate() + " " + getUserID() + " " + getSupplierID());
         } catch (IOException e) {
             System.out.println("\nAn error occurred.");
