@@ -1,4 +1,4 @@
-package Java_OOP_Assignment;
+package SalesObjects;
 
 import java.io.*;
 import java.util.*;
@@ -16,7 +16,71 @@ public class Item implements SalesObject{
     String filePath2 = "Item_Buffer.txt";
     
     public Item(){}
+    public Item(String ItemID, String ItemName, double ItemPrice, int ItemStock, int ItemLim)
+    {
+        this.ItemID=ItemID;
+        this.ItemName=ItemName;
+        this.ItemPrice=ItemPrice;
+        this.ItemStock=ItemStock;
+        this.ItemLim=ItemLim;
+    }
     
+    public String getItemID()
+    {
+        return ItemID;
+    }
+    
+    public void setItemID(String ItemID)
+    {
+        this.ItemID=ItemID;
+    }
+    
+    public String getItemName()
+    {
+        return ItemName;
+    }
+    
+    public void setItemName(String ItemName)
+    {
+        this.ItemName=ItemName;
+    }
+    
+    public double getItemPrice()
+    {
+        return ItemPrice;
+    }
+    
+    public void setItemPrice(double ItemPrice)
+    {
+        this.ItemPrice=ItemPrice;
+    }
+    
+    public int getItemStock()
+    {
+        return ItemStock;
+    }
+    
+    public void setItemStock(int ItemStock)
+    {
+        this.ItemStock=ItemStock;
+    }
+    
+    public int getItemLim()
+    {
+        return ItemLim;
+    }
+    
+    public void setItemLim(int ItemLim)
+    {
+        this.ItemLim=ItemLim;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+        
+    }
     @Override
     public void view()
     {
@@ -33,22 +97,23 @@ public class Item implements SalesObject{
    
             while (itemscanner.hasNextLine())
             {
-                ItemID = itemscanner.next();
-                ItemName=itemscanner.next();
-                ItemPrice=itemscanner.nextDouble();
-                ItemStock=itemscanner.nextInt();
-                ItemLim=itemscanner.nextInt();
-                if (ItemLim==0){}
+                Item it= new Item();
+                it.setItemID(itemscanner.next());
+                it.setItemName(itemscanner.next());
+                it.setItemPrice(itemscanner.nextDouble());
+                it.setItemStock(itemscanner.nextInt());
+                it.setItemLim(itemscanner.nextInt());
+                if (it.getItemLim()==0){}
                 else
                 {
-                    if (ItemName.length()<=7)
+                    if (it.getItemName().length()<=7)
                     {
-                        String ItemLine= ItemID+"\t\t"+ItemName+"\t\t"+ItemPrice+"\t\t"+ItemStock+"\t\t"+ItemLim;    
+                        String ItemLine= it.getItemID()+"\t\t"+it.getItemName()+"\t\t\t"+it.getItemPrice()+"\t\t"+it.getItemStock()+"\t\t"+it.getItemLim();    
                         System.out.println(ItemLine);
                     }
                     else 
                     {
-                        String ItemLine= ItemID+"\t\t"+ItemName+"\t\t"+ItemPrice+"\t\t"+ItemStock+"\t\t"+ItemLim;
+                        String ItemLine= it.getItemID()+"\t\t"+it.getItemName()+"\t\t"+it.getItemPrice()+"\t\t"+it.getItemStock()+"\t\t"+it.getItemLim();
                         System.out.println(ItemLine);
                     }
                     
@@ -66,22 +131,23 @@ public class Item implements SalesObject{
     @Override
     public void create()
     {
+        Item it=new Item();
         while(true){
-            view();
+            it.view();
             System.out.println();
             System.out.println("New Item Entry:\n");
             
             String itemID= newID();
             System.out.println("Item ID: "+ itemID);
-            
+            it.setItemID(itemID);
             
             System.out.println("Item name:\t(Input 0 to back)");
-            String itemName= Sc.nextLine();
+            it.setItemName(Sc.nextLine());
             
             
             
-            while (!itemName.equals("0")){
-                if(checkItem(itemName)==true)
+            while (it.getItemName().equals("0")){
+                if(checkItem(it.getItemName())==true)
                 {
                     System.out.println("Item exists, pls reinput");
                     System.out.println("Item name:\t(Input 0 to back)");
@@ -90,10 +156,10 @@ public class Item implements SalesObject{
                 else{
                     break;
                 }
-                itemName= Sc.nextLine();
+                it.setItemName(Sc.nextLine());
             }
       
-            if(itemName.equals("0"))
+            if(it.getItemName().equals("0"))
             {
                 break;
             }
@@ -101,16 +167,14 @@ public class Item implements SalesObject{
             
             
             System.out.println("Item price:");
-            ItemPrice= Sc.nextDouble();
+            it.setItemPrice(Sc.nextDouble());
             System.out.println("Item stock:");
-            ItemStock= Sc.nextInt();
+            it.setItemStock(Sc.nextInt());
             System.out.println("Item restock amount:");
-            ItemLim= Sc.nextInt();
+            it.setItemLim(Sc.nextInt());
             Sc.nextLine();
-            
-            String Line=itemID+" "+itemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
         
-            WriteLine(filePath,Line);       
+            WriteLine(filePath,it.toString());       
         }
     }
     
@@ -118,9 +182,11 @@ public class Item implements SalesObject{
     public void edit()
     {
         int tracker=0;
-        view();
+        Item it= new Item();
+        
         while (true)
         {
+            it.view();
             System.out.println("Select Item ID to edit: \t(Input 0 to back)");
             String EditItemID= Sc.nextLine();    
             if (EditItemID.equals("0"))
@@ -134,35 +200,33 @@ public class Item implements SalesObject{
             
                     while (itemscanner.hasNextLine())
                     {
-                        ItemID = itemscanner.next();
-                        ItemName=itemscanner.next();
-                        ItemPrice=itemscanner.nextDouble();
-                        ItemStock=itemscanner.nextInt();
-                        ItemLim=itemscanner.nextInt();
-                        String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
+                        it.setItemID(itemscanner.next());
+                        it.setItemName(itemscanner.next());
+                        it.setItemPrice(itemscanner.nextDouble());
+                        it.setItemStock(itemscanner.nextInt());
+                        it.setItemLim(itemscanner.nextInt());
 
-                        if (EditItemID.equals(ItemID))
+                        if (EditItemID.equals(it.getItemID()))
                         {
                             tracker++;
                             System.out.println("Original item info:");
-                            System.out.println(Line);
+                            System.out.println(it.toString());
                             System.out.println("Input edited info:");
                             System.out.println("Item name:");
-                            ItemName= Sc.nextLine();
+                            it.setItemName(Sc.nextLine());
                             
                             System.out.println("Item price:");
-                            ItemPrice= Sc.nextDouble();
+                            it.setItemPrice(Sc.nextDouble());
                             System.out.println("Item stock:");
-                            ItemStock= Sc.nextInt();
+                            it.setItemStock(Sc.nextInt());
                             System.out.println("Item restock amount:");
-                            ItemLim= Sc.nextInt();
+                            it.setItemLim(Sc.nextInt());
                             
                             Sc.nextLine();
                             
-                            Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim; 
                         } 
                         
-                        WriteLine(filePath2,Line);
+                        WriteLine(filePath2,it.toString());
                           
                     }
                     
@@ -192,10 +256,11 @@ public class Item implements SalesObject{
     @Override
     public void delete()
     {
+        Item it= new Item();
         while(true)
         {
             int tracker=0;
-            view();
+            it.view();
             System.out.println("Delete item ID: \t(Input 0 to back)");
             String DelItem= Sc.nextLine();
             if (DelItem.equals("0"))
@@ -209,22 +274,20 @@ public class Item implements SalesObject{
             
                     while (itemscanner.hasNextLine())
                     {
-                        ItemID = itemscanner.next();
-                        ItemName=itemscanner.next();
-                        ItemPrice=itemscanner.nextDouble();
-                        ItemStock=itemscanner.nextInt();
-                        ItemLim=itemscanner.nextInt();
-                        if (DelItem.equals(ItemID))
+                        it.setItemID(itemscanner.next());
+                        it.setItemName(itemscanner.next());
+                        it.setItemPrice(itemscanner.nextDouble());
+                        it.setItemStock(itemscanner.nextInt());
+                        it.setItemLim(itemscanner.nextInt());
+                        if (DelItem.equals(it.getItemID()))
                         {
-                            ItemLim=0;
+                            it.setItemLim(0);
                             tracker++;
-                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
-                            WriteLine(filePath2,Line);                    
+                            WriteLine(filePath2,it.toString());                    
                         }
                         else 
                         {
-                            String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
-                            WriteLine(filePath2,Line);
+                            WriteLine(filePath2,it.toString());
                         }
                     } 
                     
@@ -286,6 +349,7 @@ public class Item implements SalesObject{
     
     protected String StockUpdate(String itemId, int stock, boolean mode)
     {
+        Item it= new Item();
         int tracker=0;
         
         File itemlist = new File(filePath);
@@ -293,27 +357,25 @@ public class Item implements SalesObject{
         {
             while (itemscanner.hasNextLine())
             {
-                ItemID = itemscanner.next();
-                ItemName=itemscanner.next();
-                ItemPrice=itemscanner.nextDouble();
-                ItemStock=itemscanner.nextInt();
-                ItemLim=itemscanner.nextInt();
-                String Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;                
-                if (itemId.equals(ItemID))
+                it.setItemID(itemscanner.next());
+                it.setItemName(itemscanner.next());
+                it.setItemPrice(itemscanner.nextDouble());
+                it.setItemStock(itemscanner.nextInt());
+                it.setItemLim(itemscanner.nextInt());              
+                if (itemId.equals(it.getItemID()))
                 {
                     tracker++;
                     if (mode==true)
                     {
-                        ItemStock=ItemStock+stock;
+                        setItemStock(getItemStock()+stock);
                     }
                     else
                     {
-                        ItemStock=ItemStock-stock;
+                        setItemStock(getItemStock()-stock);
                     }
                     
-                    Line=ItemID+" "+ItemName+" "+ItemPrice+" "+ItemStock+" "+ItemLim;
                 }
-                WriteLine(filePath2,Line);
+                WriteLine(filePath2,it.toString());
             }
         }
         catch(IOException Ex)
@@ -331,23 +393,24 @@ public class Item implements SalesObject{
         }
     }
     
-    protected String getItemName(String itemid)
+    public String getItemName(String itemid)
     {
+        Item it= new Item();
         String itemname="placeholder";
         File itemlist = new File(filePath);
         try(Scanner itemscanner = new Scanner (itemlist);)
         {
             while (itemscanner.hasNextLine())
             {
-                ItemID = itemscanner.next();
-                ItemName=itemscanner.next();
-                ItemPrice=itemscanner.nextDouble();
-                ItemStock=itemscanner.nextInt();
-                ItemLim=itemscanner.nextInt();
+                it.setItemID(itemscanner.next());
+                it.setItemName(itemscanner.next());
+                it.setItemPrice(itemscanner.nextDouble());
+                it.setItemStock(itemscanner.nextInt());
+                it.setItemLim(itemscanner.nextInt());
                 
-                if(itemid.equals(ItemID))
+                if(itemid.equals(it.getItemID()))
                 {
-                    itemname=ItemName;
+                    itemname=it.getItemName();
                     break;
                 }
             }
@@ -359,6 +422,7 @@ public class Item implements SalesObject{
     
     public void viewRestockItems()
     {
+        Item it= new Item();
         System.out.println("\n=========================");
         System.out.println("\tItem List with low stock");
         System.out.println("=========================");
@@ -372,26 +436,26 @@ public class Item implements SalesObject{
             
             while (itemscanner.hasNextLine())
             {
-                ItemID = itemscanner.next();
-                ItemName=itemscanner.next();
-                ItemPrice=itemscanner.nextDouble();
-                ItemStock=itemscanner.nextInt();
-                ItemLim=itemscanner.nextInt();
-                if (ItemLim==0)
+                it.setItemID(itemscanner.next());
+                it.setItemName(itemscanner.next());
+                it.setItemPrice(itemscanner.nextDouble());
+                it.setItemStock(itemscanner.nextInt());
+                it.setItemLim(itemscanner.nextInt());
+                if (getItemLim()==0)
                 {
                     
                 }
                 else
                 {
-                    if (ItemStock<ItemLim){
-                        if (ItemName.length()<=7)
+                    if (it.getItemStock()<it.getItemLim()){
+                        if (it.getItemName().length()<=7)
                         {
-                            String ItemLine= ItemID+"\t\t"+ItemName+"\t\t\t"+ItemPrice+"\t\t\t"+ItemStock+"\t\t\t"+ItemLim;
+                            String ItemLine= it.getItemID()+"\t\t"+it.getItemName()+"\t\t\t"+it.getItemPrice()+"\t\t\t"+it.getItemStock()+"\t\t\t"+it.getItemLim();
                             System.out.println(ItemLine);
                         }
                         else 
                         {
-                            String ItemLine= ItemID+"\t\t"+ItemName+"\t\t"+ItemPrice+"\t\t\t"+ItemStock+"\t\t\t"+ItemLim;
+                            String ItemLine= it.getItemID()+"\t\t"+it.getItemName()+"\t\t"+it.getItemPrice()+"\t\t\t"+it.getItemStock()+"\t\t\t"+it.getItemLim();
                             System.out.println(ItemLine);
                         }
                     }
@@ -407,41 +471,46 @@ public class Item implements SalesObject{
     }
     
     private String newID(){
-        List<String[]> itemArray = new ArrayList<>();
-        
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = buffer.readLine()) != null) {
-                String[] itemCredentials = line.split("\\s+");
-                itemArray.add(itemCredentials);
+        Item it= new Item();
+        int ctr=1;
+        File itemlist = new File("Item.txt");
+          
+        try(Scanner itemscanner = new Scanner (itemlist);)
+        {
+            while (itemscanner.hasNextLine()){
+                
+                it.setItemID(itemscanner.next());
+                it.setItemName(itemscanner.next());
+                it.setItemPrice(itemscanner.nextDouble());
+                it.setItemStock(itemscanner.nextInt());
+                it.setItemLim(itemscanner.nextInt());
+                ctr++;
             }
-        } 
-        catch (IOException e) { 
-            System.err.println("Error reading file: " + e.getMessage());
         }
-        
-        String[] lastItem = itemArray.get(itemArray.size() - 1); String lastID = lastItem[0].substring(4);
-        int newValue = Integer.parseInt(lastID) + 1; String newID = String.format("%02d", newValue);
-        
-        return "IT00" + newID;
+        catch(IOException Ex){
+            System.out.println("Error reading file.");
+        }
+        String newID=String.format("%04d",ctr);
+        return "IT" + newID;
 
     }
     
     private boolean checkItem(String item_name)
     {
+        Item it= new Item();
         File itemlist = new File("Item.txt");
           
         try(Scanner itemscanner = new Scanner (itemlist);){
             
             while (itemscanner.hasNextLine())
             {
-                ItemID = itemscanner.next();
-                ItemName=itemscanner.next();
-                ItemPrice=itemscanner.nextDouble();
-                ItemStock=itemscanner.nextInt();
-                ItemLim=itemscanner.nextInt();
+                it.setItemID(itemscanner.next());
+                it.setItemName(itemscanner.next());
+                it.setItemPrice(itemscanner.nextDouble());
+                it.setItemStock(itemscanner.nextInt());
+                it.setItemLim(itemscanner.nextInt());
                 
-                if (item_name.equals(this.ItemName))
+                if (item_name.equals(it.getItemName()))
                 {
                     return true;
                 }
