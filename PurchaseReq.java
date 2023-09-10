@@ -84,9 +84,10 @@ class PurchaseReq implements SalesObject{
 
             switch (selection) {
                 case 1 -> {
+                    // Input Requisition details section
                     System.out.print("Enter Requisition ID: ");
                     reqID = Sc.nextLine();
-                    if (checker(filePath, reqID)) {
+                    if (checker(filePath, reqID)) { // Checking for existing requisition IDs to prevent duplicates
                         System.out.println("Requisition ID already exists.");
                         System.out.print("\nPress Enter to return...");
                         Sc.nextLine();
@@ -101,7 +102,7 @@ class PurchaseReq implements SalesObject{
                     Sc.nextLine();
                     System.out.print("Enter Requisition Date (DD-MM-YYYY): ");
                     reqDate = Sc.nextLine();
-                    PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, 1, reqDate, userID);
+                    PurchaseReq req = new PurchaseReq(reqID, itemID, reqQuantity, 1, reqDate, userID); // Creating new purchase requisition object
 
                     req.create();
 
@@ -118,7 +119,7 @@ class PurchaseReq implements SalesObject{
     @Override
     public void create() {
         try (FileWriter tfw = new FileWriter(filePath, true)) {
-            tfw.write("\n" + getReqID() + " " + getItemID() + " " + getReqQuantity() + " " + getReqStatus() + " " + getReqDate() + " " + getUserID());
+            tfw.write("\n" + getReqID() + " " + getItemID() + " " + getReqQuantity() + " " + getReqStatus() + " " + getReqDate() + " " + getUserID()); // Retrieving data using getters and writing into text file
         } catch (IOException e) {
             System.out.println("\nAn error occurred.");
         }
@@ -175,6 +176,7 @@ class PurchaseReq implements SalesObject{
     @Override
     public void edit() {}
     // Edit line in text file method
+    // Copies the contents from the original file to a temporary file except for the line which new data is to be written
     static void EditFileLine(int selection, String reqID, String itemID, int reqQuantity, int reqStatus, String reqDate, String userID) {  
         try (BufferedReader rd = new BufferedReader(new FileReader(filePath));
              BufferedWriter wr = new BufferedWriter(new FileWriter(filePath2))) {
@@ -225,7 +227,7 @@ class PurchaseReq implements SalesObject{
 
                 //Call delete field method
                 System.out.println("Do you wish to delete the selected purchase requisition?");
-                System.out.println("Type out YES to confirm.");
+                System.out.println("Type out YES to confirm."); // Confirmation to prevent accidental deletion
                 System.out.print("\nConfirmation: ");
                 String confirmation = Sc.nextLine();
                 if (Objects.equals(confirmation, "YES")) {
@@ -244,6 +246,7 @@ class PurchaseReq implements SalesObject{
         System.out.println();
     }
     // Delete line from text file method
+    // Copies contents from the original text file over to a temporary file except the selected line to be deleted.
     static void DeleteFileLine(int selection) {
         try (BufferedReader rd = new BufferedReader(new FileReader(filePath));
              BufferedWriter wr = new BufferedWriter(new FileWriter(filePath2))) {
@@ -267,6 +270,7 @@ class PurchaseReq implements SalesObject{
 
 
     // Replace actual text file with buffer text file method
+    // Deletes the original text file, then renames the temporary file
     static void ReplaceReq() {
         //Delete old requisition file
         File del = new File(filePath);
@@ -318,7 +322,7 @@ class PurchaseReq implements SalesObject{
                 try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
                     String line; int currentRow = 0;
 
-                    while ((line = br.readLine()) != null) {
+                    while ((line = br.readLine()) != null) { // Prints the list of pending purchase requisitions
                         String[] data = line.split(" ");
                         if (data.length >= 4) {
                             reqID = data[0];
@@ -361,7 +365,7 @@ class PurchaseReq implements SalesObject{
                 }
                 Sc.nextLine();
 
-                PurchaseReq.EditFileLine(selection2, reqID, itemID, reqQuantity, selection3, reqDate, userID);
+                PurchaseReq.EditFileLine(selection2, reqID, itemID, reqQuantity, selection3, reqDate, userID); // Calling edit line method
                 ReplaceReq();
                 System.out.print("\nPress Enter to continue...");
                 Sc.nextLine();
