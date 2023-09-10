@@ -367,11 +367,11 @@ public class Item implements SalesObject{
                     tracker++;
                     if (mode==true)
                     {
-                        setItemStock(getItemStock()+stock);
+                        it.setItemStock(it.getItemStock()+stock);
                     }
                     else
                     {
-                        setItemStock(getItemStock()-stock);
+                        it.setItemStock(it.getItemStock()-stock);
                     }
                     
                 }
@@ -441,7 +441,7 @@ public class Item implements SalesObject{
                 it.setItemPrice(itemscanner.nextDouble());
                 it.setItemStock(itemscanner.nextInt());
                 it.setItemLim(itemscanner.nextInt());
-                if (getItemLim()==0)
+                if (ot.getItemLim()==0)
                 {
                     
                 }
