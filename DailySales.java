@@ -1,4 +1,4 @@
-package Java_OOP_Assignment;
+package SalesObjects;
 
 import java.io.*;
 import java.util.*;
@@ -6,30 +6,50 @@ import java.text.SimpleDateFormat;
 
 public class DailySales extends Item{
     
-    private String ItemID;
-    private String ItemName;
-    private int sales_amount;
+    private int SalesAmount;
+    
     private String FileName;
     
     
-    final static String DIR="Daily Sales Text File";
+    final static String DIR="C:\\Users\\bryan\\OneDrive\\Documents\\NetBeansProjects\\PurchaseManagementSystem\\DailySales";
     final static String DIRNAME=DIR+"\\";
     
     public DailySales(){}
     
+    public int getSalesAmount()
+    {
+        return SalesAmount;
+    }
+    
+    public void setSalesAmount(int SalesAmount)
+    {
+        this.SalesAmount=SalesAmount;
+    }
+    
+    public String getFileName()
+    {
+        return FileName;
+    }
+    
+    public void setFileName(String FileName)
+    {
+        this.FileName=FileName;
+    }
+    
     @Override
     public void view()
     {
+        DailySales ds= new DailySales();
         ListDir();
         System.out.println("Select an entry to view(Input date as shown):\t(input 0 to back)");
-        FileName = Sc.next();
-        if (FileName.equals("0"))
+        ds.setFileName(Sc.next());
+        if (ds.getFileName().equals("0"))
         {}
         else 
         {
-            if (CheckDir(FileName)==true)
+            if (CheckDir(ds.getFileName())==true)
             {
-                DailySalesViewer(FileName);
+                DailySalesViewer(ds.getFileName());
             }
             else
             {
@@ -50,19 +70,20 @@ public class DailySales extends Item{
     @Override
     public void create()
     {      
+        DailySales ds= new DailySales();
         Date thisdate = new Date();
         SimpleDateFormat day= new SimpleDateFormat("dd");
         SimpleDateFormat month = new SimpleDateFormat("MM");
         SimpleDateFormat year = new SimpleDateFormat("Y");
             
         String date=day.format(thisdate)+month.format(thisdate)+year.format(thisdate);
-        String filename=DIRNAME+date+".txt";
+        ds.setFileName(DIRNAME+date+".txt");
             
         System.out.println();
         Item It= new Item();
         It.view();
         System.out.println("Create/append daily sales entry for today("+date+"): ");
-        File f = new File(filename);
+        File f = new File(ds.getFileName());
         if (f.exists())
         {
             DailySalesViewer(date);
@@ -70,24 +91,24 @@ public class DailySales extends Item{
         while (true)
         {
             System.out.println("Select Item ID: \t(input 0 to exit)");
-            ItemID=Sc.next();
+            ds.setItemID(Sc.next());
             
-            if (ItemID.equals("0"))
+            if (ds.getItemID().equals("0"))
             {
                 break;
             }
             else
             {
                 System.out.println("Input sales amount: ");
-                sales_amount=Sc.nextInt();
-                String Line= ItemID+" "+getItemName(ItemID)+" "+sales_amount;
-                if (getItemName(ItemID).equals("placeholder"))
+                ds.setSalesAmount(Sc.nextInt());
+                String Line= ds.getItemID()+" "+ds.getItemName(ds.getItemID())+" "+ds.getSalesAmount();
+                if (ds.getItemName(ds.getItemID()).equals("placeholder"))
                 {
-                    
+                    System.out.println("Item not found.");
                 }
-                else{WriteLine(filename,Line);}
+                else{WriteLine(ds.getFileName(),Line);}
                 
-                System.out.println(StockUpdate(ItemID,sales_amount,false));
+                System.out.println(StockUpdate(ds.getItemID(),ds.getSalesAmount(),false));
             }
         }        
     }
@@ -95,21 +116,22 @@ public class DailySales extends Item{
     @Override
     public void edit()
     {       
+        DailySales ds=new DailySales();
         ListDir();
         System.out.println("Select an entry to edit(Input date as shown):\t(input 0 to back)");
-        FileName = Sc.next();
-        String FilePath= DIRNAME+FileName+".txt";
+        ds.setFileName(Sc.next());
+        String FilePath= DIRNAME+ds.getFileName()+".txt";
         String BufferFilePath= DIRNAME+"Buffer.txt";
-        if (FileName.equals("0")){}
+        if (ds.getFileName().equals("0")){}
         else 
         {
-            if (CheckDir(FileName)==false)
+            if (CheckDir(ds.getFileName())==false)
             {
                 System.out.println("Entry not found");
             }
             else
             {
-                DailySalesViewer(FileName);
+                DailySalesViewer(ds.getFileName());
                 File orifile = new File(FilePath);
                 System.out.println("1. Edit sales amount\n2. Add new item sales\n3. Delete an entry\nInput any other integer value to exit.)");
                 
@@ -120,18 +142,18 @@ public class DailySales extends Item{
                         try(Scanner SalesScanner = new Scanner (orifile)){
                             while (SalesScanner.hasNextLine())
                             {
-                                ItemID=SalesScanner.next();
-                                ItemName=SalesScanner.next();
-                                sales_amount=SalesScanner.nextInt();
+                                ds.setItemID(SalesScanner.next());
+                                ds.setItemName(SalesScanner.next());
+                                ds.setSalesAmount(SalesScanner.nextInt());
                                 
-                                System.out.println("Item ID: "+ItemID+"\tItem name: "+ItemName+"\nInitial sales amount: "+sales_amount);
+                                System.out.println("Item ID: "+ds.getItemID()+"\tItem name: "+ds.getItemName()+"\nInitial sales amount: "+ds.getSalesAmount());
                                 System.out.println("Updated sales amount: ");
                                 int updated_sales_amount=Sc.nextInt();
                                 
-                                String Line=ItemID+" "+ItemName+" "+updated_sales_amount;
+                                String Line=getItemID()+" "+getItemName()+" "+updated_sales_amount;
                                 
                                 WriteLine(BufferFilePath,Line);
-                                System.out.println(StockUpdate(ItemID,updated_sales_amount-sales_amount,false));  
+                                System.out.println(StockUpdate(ds.getItemID(),updated_sales_amount-ds.getSalesAmount(),false));  
                             }
                         }
                         catch(IOException Ex)
@@ -147,12 +169,12 @@ public class DailySales extends Item{
                         Item it=new Item();
                         it.view();
                         System.out.println("New Item ID: ");
-                        ItemID=Sc.next();
+                        ds.setItemID(Sc.next());
                         System.out.println("Sales amount: ");
-                        sales_amount=Sc.nextInt();
-                        String Line= ItemID+" "+getItemName(ItemID)+" "+sales_amount;
+                        ds.setSalesAmount(Sc.nextInt());
+                        String Line= ds.getItemID()+" "+ds.getItemName(ds.getItemID())+" "+ds.getSalesAmount();
                         WriteLine(FilePath,Line);
-                        System.out.println(StockUpdate(ItemID,sales_amount,false));
+                        System.out.println(StockUpdate(ds.getItemID(),ds.getSalesAmount(),false));
                     }
                     case 3 ->{
                         int tracker=0;
@@ -161,14 +183,14 @@ public class DailySales extends Item{
                         try(Scanner SalesScanner = new Scanner (orifile)){
                             while (SalesScanner.hasNextLine())
                             {
-                                ItemID=SalesScanner.next();
-                                ItemName=SalesScanner.next();
-                                sales_amount=SalesScanner.nextInt();
+                                ds.setItemID(SalesScanner.next());
+                                ds.setItemName(SalesScanner.next());
+                                ds.setSalesAmount(SalesScanner.nextInt());
                                 
-                                String Line=ItemID+" "+ItemName+" "+sales_amount;
-                                if (Item_ID.equals(ItemID)){
+                                String Line=ds.getItemID()+" "+ds.getItemName()+" "+ds.getSalesAmount();
+                                if (Item_ID.equals(ds.getItemID())){
                                     tracker++;
-                                    System.out.println(StockUpdate(ItemID,sales_amount,true));
+                                    System.out.println(StockUpdate(ds.getItemID(),ds.getSalesAmount(),true));
                                 }
                                 else{WriteLine(BufferFilePath,Line);}
                                 
@@ -194,33 +216,34 @@ public class DailySales extends Item{
     @Override
     public void delete()
     {
+        DailySales ds= new DailySales();
         ListDir();
         System.out.println("Select an entry to view(Input date as shown):\t(input 0 to back)");
-        FileName = Sc.next();
-        if (FileName.equals("0")){}
+        ds.setFileName(Sc.next());
+        if (ds.getFileName().equals("0")){}
         else 
         {
-            if (CheckDir(FileName)==false)
+            if (CheckDir(ds.getFileName())==false)
             {
                 System.out.println("Entry not found.");
             }
             else
             {
-                DailySalesViewer(FileName);
+                DailySalesViewer(ds.getFileName());
                 
                 System.out.println("Confirm delete? This action is inreversible!\n\t1. Yes\n\t2. No(Exit)");
                 String exit=Sc.next();
                 if(exit.equals("1")){
-                    String filepath=DIRNAME+FileName+".txt";
+                    String filepath=DIRNAME+ds.getFileName()+".txt";
                     File orifile = new File(filepath);
                     try(Scanner SalesScanner = new Scanner (orifile)){
                         while (SalesScanner.hasNextLine())
                         {
-                            ItemID=SalesScanner.next();
-                            ItemName=SalesScanner.next();
-                            sales_amount=SalesScanner.nextInt();
+                            ds.setItemID(SalesScanner.next());
+                            ds.setItemName(SalesScanner.next());
+                            ds.setSalesAmount(SalesScanner.nextInt());
                                 
-                            System.out.println(StockUpdate(ItemID,sales_amount, true));
+                            System.out.println(StockUpdate(ds.getItemID(),ds.getSalesAmount(), true));
                         }
                     }
                     catch(IOException Ex)
@@ -286,30 +309,32 @@ public class DailySales extends Item{
     
     private void DailySalesViewer(String path)
     {
+        DailySales ds= new DailySales();
+        ds.setFileName(path);
         String s = "=".repeat(45);
         System.out.format("""
                          %s
                          Daily sales entry: %s
                          %s
-                         """,s, path, s);
+                         """,s, ds.getFileName(), s);
         System.out.println("Item ID\t\tItem Name\t\tSales");
         
-        File DailySalesList = new File(DIRNAME+path+".txt");
+        File DailySalesList = new File(DIRNAME+ds.getFileName()+".txt");
         
         try(Scanner itemscanner = new Scanner (DailySalesList);)
         {
             while(itemscanner.hasNextLine())
             {
-                ItemID=itemscanner.next();
-                ItemName=itemscanner.next();
-                sales_amount=itemscanner.nextInt();
-                if(ItemName.length()<=7)
+                ds.setItemID(itemscanner.next());
+                ds.setItemName(itemscanner.next());
+                ds.setSalesAmount(itemscanner.nextInt());
+                if(ds.getItemName().length()<=7)
                 {
-                    System.out.println(ItemID+"\t\t"+ItemName+"\t\t\t"+sales_amount);
+                    System.out.println(ds.getItemID()+"\t\t"+ds.getItemName()+"\t\t\t"+ds.getSalesAmount());
                 }
                 else 
                 {
-                    System.out.println(ItemID+"\t\t"+ItemName+"\t\t"+sales_amount);
+                    System.out.println(ds.getItemID()+"\t\t"+ds.getItemName()+"\t\t"+ds.getSalesAmount());
                 }     
             } 
             
