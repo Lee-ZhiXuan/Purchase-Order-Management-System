@@ -4,7 +4,7 @@ public class Assignment_Main_Page{
 
     public static void main(String[] arg){ 
         Login login = new Login();
-        
+               
         login.enter_userInfo();
         String[] userCredentials = login.check_account();
         

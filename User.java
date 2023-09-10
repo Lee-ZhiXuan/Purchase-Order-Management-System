@@ -17,9 +17,6 @@ public abstract class User {
     public String getID(){
         return this.userID;  
     }
-
-    abstract void menu();
-}
     
     public void sleep(){
         try {
@@ -30,5 +27,6 @@ public abstract class User {
         }
     }
     
-
+    abstract void menu();
+}
 

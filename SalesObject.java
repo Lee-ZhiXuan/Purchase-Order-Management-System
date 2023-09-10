@@ -1,4 +1,4 @@
-package SalesObjects;
+package Java_OOP_Assignment;
 
 interface SalesObject {
     abstract public void view();
